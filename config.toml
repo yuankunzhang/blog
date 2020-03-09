@@ -1,0 +1,18 @@
+baseURL = "https://yuankun.me/"
+languageCode = "en-us"
+title = "Yuankun's Blog"
+theme = "tale"
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    title = "About"
+    url = "/about/"
+    weight = 0
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    title = "Posts"
+    url = "/posts/"
+    weight = 0
