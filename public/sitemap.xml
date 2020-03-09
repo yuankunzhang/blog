@@ -3,15 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://yuankun.me/about/</loc>
+    <lastmod>2020-03-09T14:29:36+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/</loc>
+    <lastmod>2020-03-09T14:29:36+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://yuankun.me/categories/</loc>
   </url>
   
   <url>
     <loc>https://yuankun.me/tags/</loc>
-  </url>
-  
-  <url>
-    <loc>https://yuankun.me/</loc>
   </url>
   
 </urlset>
