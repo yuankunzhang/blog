@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Publish Subdirectory to Github Pages &middot; Yuankun&#39;s Blog</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Yuankun&#39;s Blog" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Yuankun&#39;s Blog</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Posts</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-03-12 22:14:58 &#43;0800 &#43;08">March 12, 2020</time>
+</div>
+		<h1 class="post-title">Publish Subdirectory to Github Pages</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>I&rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the <code>public/</code> subdirectory stores the generated static pages:</p>
+<pre><code>├── archetypes/
+├── config.toml
+├── content/
+├── data/
+├── layouts/
+├── public/
+├── resources/
+├── static/
+└── themes/
+</code></pre><p>How do I publish the <code>public/</code> subdirectory, instead of the root directory, to Github Pages?</p>
+<p>We need two branches to achieve this. Assuming your default publishing source is the <code>gh-pages</code> branch (check out <a href="https://help.github.com/en/github/working-with-github-pages/about-github-pages#publishing-sources-for-github-pages-sites">this link</a> for more information about default publishing source), we commit the entire Hugo site to the <code>master</code> branch, and commit only the <code>public/</code> subdirectory to the <code>gh-pages</code> branch. Here are the steps:</p>
+<ol>
+<li>Commit <code>public/</code> to <code>master</code> branch. You need first make sure it isn&rsquo;t ignored by Git.</li>
+<li>Push only <code>public/</code> to <code>gh-pages</code> branch: <code>git subtree push --prefix public origin gh-pages</code>.</li>
+</ol>
+<p>This should do the trick.</p>
+
+		
+	</div>
+
+	<div class="pagination">
+		<a href="/about/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-03-12 23:00:46.661820058 &#43;0800 &#43;08 m=&#43;0.039154167">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

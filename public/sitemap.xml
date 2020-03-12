@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://yuankun.me/posts/</loc>
+    <lastmod>2020-03-12T22:14:58+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/publish-subdirectory-to-github-pages/</loc>
+    <lastmod>2020-03-12T22:14:58+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://yuankun.me/about/</loc>
     <lastmod>2020-03-09T14:29:36+08:00</lastmod>
   </url>
