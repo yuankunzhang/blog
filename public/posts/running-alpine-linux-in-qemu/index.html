@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Running Alpine Linux in QEMU &middot; Yuankun&#39;s Blog</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Yuankun&#39;s Blog" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Yuankun&#39;s Blog</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Posts</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-03-14 09:41:41 &#43;0800 &#43;08">March 14, 2020</time>
+</div>
+		<h1 class="post-title">Running Alpine Linux in QEMU</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>How to run a Linux operating system in QEMU.</p>
+<h2 id="qemu-a-very-short-introduction">QEMU: a very short introduction</h2>
+<p>According to its <a href="https://www.qemu.org">official site</a>, QEMU is a generic and open source machine emulator and virtualizer.</p>
+<p>QEMU works in one of the two operating modes:</p>
+<ul>
+<li><strong>Full system emulation</strong>. In this mode, QEMU emulates a full system, including processors and peripherals. It can be used to launch virtual guest operating systems.</li>
+<li><strong>User mode emulation</strong>. In this mode, QEMU can launch processes that were compiled for a different instruction set.</li>
+</ul>
+<p>Futhermore, you can provision the <code>-enable-kvm</code> option to leverage Linux KVM. With this option, QEMU deals with the setting up and migration of KVM images and emulates hardwares, and the execution of the guest is done by KVM as requested by QEMU.</p>
+<p>QEMU supports a long <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-using_qemu_img-supported_qemu_img_formats">list of disk image formats</a>, including the most popular two:</p>
+<ul>
+<li>Raw images (<code>.img</code>). This can be the fastest file-based format. If your file system supports holes, then only the written sectors will reserve space. Use <code>qemu-img info</code> or <code>ls -ls</code> to obtain the real size used by the image. Although raw images give optimal performance, only very basic features are available.</li>
+<li>QEMU copy on write (<code>.qcow2</code>). This is the most versatile format with advanced feature set. But the feature set comes at the cost of performance.</li>
+</ul>
+<h2 id="run-alpine-linux-in-qemu">Run Alpine Linux in QEMU</h2>
+<p>Let&rsquo;s start by downloading the Alpine Linux installation media.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
+</code></pre></div><p>Create a virtual hard drive for the Linux machine. We declare the size to be 10G, but note that only the written sectors will reserve space. The actual size of this file is much smaller.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qemu-img create -f qcow2 alpine.qcow2 10G
+</code></pre></div><p>That&rsquo;s all we need for preparation. Now let&rsquo;s move on to boot the installation media.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qemu-system-x86_64 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">2048</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -nic user <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -drive file<span style="color:#f92672">=</span>alpine.qcow2,media<span style="color:#f92672">=</span>disk <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -cdrom alpine-standard-3.11.3-x86_64.iso
+</code></pre></div><ul>
+<li><code>-enable-kvm</code>: Make use of KVM when running a target architecture that is the same as the host architecture. The guest machine can then take advantage of the KVM acceleration.</li>
+<li><code>-m 2048</code>: Allocate 2GB memory to guest machine.</li>
+<li><code>-nic user</code>: Add a virtual network interface controller to guest machine. More in this <a href="https://www.qemu.org/2018/05/31/nic-parameter/">article</a>.</li>
+<li><code>-drive file=alpine.qcow2,media=disk</code>: Attach the newly created virtual hard drive to guest machine. The virtual hard drive will be mounted at <code>/dev/vda</code>.</li>
+<li><code>-cdrom alpine-standard-3.11.3-x86_64.iso</code>: Attach a virtual CDROM drive and load Alpine Linux installation media into it.</li>
+</ul>
+<p>After installing Alpine Linux to the hard drive, we can boot without the <code>-cdrom</code> option.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qemu-system-x86_64 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">2048</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -nic user <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -drive file<span style="color:#f92672">=</span>alpine.qcow2,media<span style="color:#f92672">=</span>disk
+</code></pre></div><p>I&rsquo;m impressed by the flexibility and versatility of QEMU (of course this may come as a downside to some people because there are tons of options to choose).</p>
+
+		
+<script src="https://utteranc.es/client.js"
+        repo="yuankunzhang/blog"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/publish-subdirectory-to-github-pages/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-03-14 13:56:56.915227314 &#43;0800 &#43;08 m=&#43;0.040716077">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

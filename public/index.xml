@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Running Alpine Linux in QEMU</title>
+      <link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link>
+      <pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid>
+      <description>&lt;p&gt;How to run a Linux operating system in QEMU.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Publish Subdirectory to Github Pages</title>
       <link>https://yuankun.me/posts/publish-subdirectory-to-github-pages/</link>
       <pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate>
