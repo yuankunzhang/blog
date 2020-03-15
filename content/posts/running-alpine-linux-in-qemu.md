@@ -44,6 +44,7 @@ That's all we need for preparation. Now let's move on to boot the installation m
 qemu-system-x86_64 \
     -enable-kvm \
     -m 2048 \
+    -smp cores=2,threads=4 \
     -nic user \
     -drive file=alpine.qcow2,media=disk \
     -cdrom alpine-standard-3.11.3-x86_64.iso
@@ -51,6 +52,7 @@ qemu-system-x86_64 \
 
 * `-enable-kvm`: Make use of KVM when running a target architecture that is the same as the host architecture. The guest machine can then take advantage of the KVM acceleration.
 * `-m 2048`: Allocate 2GB memory to guest machine.
+* `-smp cores=2,threads=4`: Specify the number of CPU cores and threads to use.
 * `-nic user`: Add a virtual network interface controller to guest machine. More in this [article](https://www.qemu.org/2018/05/31/nic-parameter/).
 * `-drive file=alpine.qcow2,media=disk`: Attach the newly created virtual hard drive to guest machine. The virtual hard drive will be mounted at `/dev/vda`.
 * `-cdrom alpine-standard-3.11.3-x86_64.iso`: Attach a virtual CDROM drive and load Alpine Linux installation media into it.

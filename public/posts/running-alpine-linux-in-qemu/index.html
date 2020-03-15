@@ -85,12 +85,14 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">qemu-system-x86_64 <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">2048</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -smp cores<span style="color:#f92672">=</span>2,threads<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -nic user <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -drive file<span style="color:#f92672">=</span>alpine.qcow2,media<span style="color:#f92672">=</span>disk <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -cdrom alpine-standard-3.11.3-x86_64.iso
 </code></pre></div><ul>
 <li><code>-enable-kvm</code>: Make use of KVM when running a target architecture that is the same as the host architecture. The guest machine can then take advantage of the KVM acceleration.</li>
 <li><code>-m 2048</code>: Allocate 2GB memory to guest machine.</li>
+<li><code>-smp cores=2,threads=4</code>: Specify the number of CPU cores and threads to use.</li>
 <li><code>-nic user</code>: Add a virtual network interface controller to guest machine. More in this <a href="https://www.qemu.org/2018/05/31/nic-parameter/">article</a>.</li>
 <li><code>-drive file=alpine.qcow2,media=disk</code>: Attach the newly created virtual hard drive to guest machine. The virtual hard drive will be mounted at <code>/dev/vda</code>.</li>
 <li><code>-cdrom alpine-standard-3.11.3-x86_64.iso</code>: Attach a virtual CDROM drive and load Alpine Linux installation media into it.</li>
@@ -124,7 +126,7 @@
 
         		<footer>
 			<span>
-			&copy; <time datetime="2020-03-14 13:56:56.915227314 &#43;0800 &#43;08 m=&#43;0.040716077">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			&copy; <time datetime="2020-03-15 23:08:21.717309356 &#43;0800 &#43;08 m=&#43;0.071340867">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
 			</span>
 		</footer>
 
