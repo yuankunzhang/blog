@@ -24,24 +24,24 @@ QEMU supports a long [list of disk image formats](https://access.redhat.com/docu
 * Raw images (`.img`). This can be the fastest file-based format. If your file system supports holes, then only the written sectors will reserve space. Use `qemu-img info` or `ls -ls` to obtain the real size used by the image. Although raw images give optimal performance, only very basic features are available.
 * QEMU copy on write (`.qcow2`). This is the most versatile format with advanced feature set. But the feature set comes at the cost of performance.
 
-## Run Alpine Linux in QEMU
+## Running Alpine Linux in QEMU
 
 Let's start by downloading the Alpine Linux installation media.
 
 ```sh
-wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
+$ wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
 ```
 
 Create a virtual hard drive for the Linux machine. We declare the size to be 10G, but note that only the written sectors will reserve space. The actual size of this file is much smaller.
 
 ```sh
-qemu-img create -f qcow2 alpine.qcow2 10G
+$ qemu-img create -f qcow2 alpine.qcow2 10G
 ```
 
 That's all we need for preparation. Now let's move on to boot the installation media.
 
 ```sh
-qemu-system-x86_64 \
+$ qemu-system-x86_64 \
     -enable-kvm \
     -m 2048 \
     -smp cores=2,threads=4 \
@@ -60,7 +60,7 @@ qemu-system-x86_64 \
 After installing Alpine Linux to the hard drive, we can boot without the `-cdrom` option.
 
 ```sh
-qemu-system-x86_64 \
+$ qemu-system-x86_64 \
     -enable-kvm \
     -m 2048 \
     -nic user \

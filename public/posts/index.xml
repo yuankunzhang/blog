@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Yuankun&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 14 Mar 2020 09:41:41 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 16 Mar 2020 22:50:52 +0800</lastBuildDate>
     
 	<atom:link href="https://yuankun.me/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Running Raw Linux Kernel in QEMU</title>
+      <link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link>
+      <pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
+      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Running Alpine Linux in QEMU</title>
@@ -21,11 +30,11 @@
     </item>
     
     <item>
-      <title>Publish Subdirectory to Github Pages</title>
-      <link>https://yuankun.me/posts/publish-subdirectory-to-github-pages/</link>
+      <title>Publishing Subdirectory to Github Pages</title>
+      <link>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</link>
       <pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate>
       
-      <guid>https://yuankun.me/posts/publish-subdirectory-to-github-pages/</guid>
+      <guid>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</guid>
       <description>&lt;p&gt;I&amp;rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the &lt;code&gt;public/&lt;/code&gt; subdirectory stores the generated static pages:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;├── archetypes/
 ├── config.toml

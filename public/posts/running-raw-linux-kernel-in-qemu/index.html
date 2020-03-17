@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Running Raw Linux Kernel in QEMU &middot; Yuankun&#39;s Blog</title>
+
+		
+  		<link rel="stylesheet" href="/css/style.css">
+		<link rel="stylesheet" href="/css/fonts.css">
+		
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+		
+		<link href="" rel="alternate" type="application/rss+xml" title="Yuankun&#39;s Blog" />
+	</head>
+
+    <body>
+        		<nav class="nav">
+			<div class="nav-container">
+				<a href="/">
+					<h2 class="nav-title">Yuankun&#39;s Blog</h2>
+				</a>
+				<ul>
+    
+    
+        <li>
+            <a href="/about/">
+                
+                <span>About</span>
+                
+            </a>
+        </li>
+    
+        <li>
+            <a href="/posts/">
+                
+                <span>Posts</span>
+                
+            </a>
+        </li>
+    
+</ul>
+			</div>
+		</nav>
+
+        
+
+<main>
+	<div class="post">
+		<div class="post-info">
+    <span>Written by</span>
+        
+        <br>
+        <span>on&nbsp;</span><time datetime="2020-03-16 22:50:52 &#43;0800 &#43;08">March 16, 2020</time>
+</div>
+		<h1 class="post-title">Running Raw Linux Kernel in QEMU</h1>
+<div class="post-line"></div>
+
+		
+
+		<p>In last post we see how to run a packed Linux distribution. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.</p>
+<h2 id="initial-ramdisk-a-very-short-introduction">Initial ramdisk: a very short introduction</h2>
+<p>Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to bake all the device drivers into the kernel image. On my machine, the size of <code>vmlinuz-linux</code> is only 6.3 megabytes:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ls -lh /boot/vmlinuz-linux
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root 6.3M Mar <span style="color:#ae81ff">15</span> 21:30 /boot/vmlinuz-linux
+</code></pre></div><p>This raises the problem of detecting and loading the modules necessary to mount the root file system at boot time. It&rsquo;s a chicken-and-egg problem. To further complicate the situation, the root file system may require special preparations to mount (for instance, it is on a encrypted partition).</p>
+<p>Now comes the initial ramdisk as a temporary, ram-based root file system. It contains user-space utilities which detect hardwares, descover devices, load necessary modules, and mount the real root file system. Once it is loaded into memory, a simple but sufficient environment is set up for the Linux kernel to complete the boot process. This environment is often called &ldquo;early user space&rdquo;.</p>
+<p>On my machine, the initial ramdisk image sits in the boot partition with the name <code>initramfs-linux.img</code>. It is larger than the Linux kernel image:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ ls -lh /boot/initramfs-linux.img
+-rw-r--r-- <span style="color:#ae81ff">1</span> root root 9.4M Mar <span style="color:#ae81ff">15</span> 21:30 /boot/initramfs-linux.img
+</code></pre></div><p>We can inspect contents of the image by using command <code>lsinitcpio /boot/initramfs-linux.img</code>. Indeed, it is a simplified root system with a bunch of helper tools:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ lsinitcpio /boot/initramfs-linux.img
+bin
+buildconfig
+config
+dev/
+etc/
+etc/fstab
+etc/initrd-release
+etc/ld.so.cache
+etc/ld.so.conf
+etc/modprobe.d/
+etc/mtab
+hooks/
+hooks/udev
+init
+init_functions
+lib
+lib64
+new_root/
+proc/
+run/
+sbin
+sys/
+tmp/
+usr/
+usr/bin/
+...
+var/
+var/run
+VERSION
+</code></pre></div><h2 id="making-an-initial-ramdisk">Making an initial ramdisk</h2>
+<p>The initial ramdisk creation command in Arch Linux is <code>mkinitcpio</code>, and may defer in other distributions.</p>
+<p>Quoting from man page of <code>mkinitcpio</code>:</p>
+<blockquote>
+<p>(mkinitcpio) creates an initial ramdisk environment for booting the Linux kernel. The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init. This makes it possible to have, for example, encrypted root filesystems and root filesystems on a software RAID array. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features.</p>
+</blockquote>
+<p>Let&rsquo;s go ahead and create the initial ramdisk.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ mkinitcpio -g initramfs.img
+<span style="color:#f92672">==</span>&gt; Starting build: 5.5.9-arch1-2
+  -&gt; Running build hook: <span style="color:#f92672">[</span>base<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>udev<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>autodetect<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>modconf<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>block<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>filesystems<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>keyboard<span style="color:#f92672">]</span>
+  -&gt; Running build hook: <span style="color:#f92672">[</span>fsck<span style="color:#f92672">]</span>
+<span style="color:#f92672">==</span>&gt; Generating module dependencies
+<span style="color:#f92672">==</span>&gt; Creating gzip-compressed initcpio image: /home/yuankun/qemu-test/initramfs.img
+<span style="color:#f92672">==</span>&gt; Image generation successful
+</code></pre></div><h2 id="configuring-and-building-the-linux-kernel">Configuring and building the Linux kernel</h2>
+<p>Clone the Linux source code, and configure the Linux kernel with <code>make ARCH=x86_64 menuconfig</code>.</p>
+<p><img src="/img/linux-menuconfig.png" alt="Menuconfig"></p>
+<p>Save the configurations and exit the configuration interface, now let&rsquo;s compile the kernel image. The compiled kernel image will be located at <code>arch/x86/boot/bzImage</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ make -j8
+...
+Setup is <span style="color:#ae81ff">13820</span> bytes <span style="color:#f92672">(</span>padded to <span style="color:#ae81ff">13824</span> bytes<span style="color:#f92672">)</span>.
+System is <span style="color:#ae81ff">8801</span> kB
+CRC 52c54fbc
+Kernel: arch/x86/boot/bzImage is ready  <span style="color:#f92672">(</span><span style="color:#75715e">#2)</span>
+</code></pre></div><p>The <code>-j</code> option specifies the number of jobs (commands) to run simultaneously. It&rsquo;s a reasonable choice to match it with your available logical CPU cores.</p>
+<h2 id="booting-the-linux-kernel-in-qemu">Booting the Linux kernel in QEMU</h2>
+<p>Now that we have both the Kernel image and the initial ramdisk, it&rsquo;s time to boot the Linux kernel in QEMU.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ qemu-system-x86_64 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -kernel bzImage <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -smp cores<span style="color:#f92672">=</span>1,threads<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">1024</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -append <span style="color:#e6db74">&#34;console=ttyS0&#34;</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -initrd initramfs.img <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -serial stdio <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -display none
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> Linux version 5.6.0-rc6+ <span style="color:#f92672">(</span>yuankun@mars<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>gcc version 9.3.0 <span style="color:#f92672">(</span>Arch Linux 9.3.0-1<span style="color:#f92672">))</span> <span style="color:#75715e">#2 SMP Tue Mar 17 17:42:13 +08 2020</span>
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> Command line: console<span style="color:#f92672">=</span>ttyS0
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> x86/fpu: x87 FPU will use FXSAVE
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-provided physical RAM map:
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x0000000000000000-0x000000000009fbff<span style="color:#f92672">]</span> usable
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x000000000009fc00-0x000000000009ffff<span style="color:#f92672">]</span> reserved
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x00000000000f0000-0x00000000000fffff<span style="color:#f92672">]</span> reserved
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x0000000000100000-0x000000007ffdffff<span style="color:#f92672">]</span> usable
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x000000007ffe0000-0x000000007fffffff<span style="color:#f92672">]</span> reserved
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x00000000feffc000-0x00000000feffffff<span style="color:#f92672">]</span> reserved
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> BIOS-e820: <span style="color:#f92672">[</span>mem 0x00000000fffc0000-0x00000000ffffffff<span style="color:#f92672">]</span> reserved
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> NX <span style="color:#f92672">(</span>Execute Disable<span style="color:#f92672">)</span> protection: active
+<span style="color:#f92672">[</span>    0.000000<span style="color:#f92672">]</span> SMBIOS 2.8 present.
+...
+<span style="color:#f92672">[</span>rootfs <span style="color:#f92672">]</span>#
+</code></pre></div><p>Soon you will find the <code>[rootfs] #</code> prompt appearing, and cheers we are now in the environment provided by the initial ramdisk.</p>
+
+		
+<script src="https://utteranc.es/client.js"
+        repo="yuankunzhang/blog"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+	</div>
+
+	<div class="pagination">
+		<a href="/posts/running-alpine-linux-in-qemu/" class="left arrow">&#8592;</a>
+
+		<a href="#" class="top">Top</a>
+	</div>
+</main>
+
+
+        		<footer>
+			<span>
+			&copy; <time datetime="2020-03-17 18:48:26.364720724 &#43;0800 &#43;08 m=&#43;0.041071084">2020</time> . Made with <a href='https://gohugo.io'>Hugo</a> using the <a href='https://github.com/EmielH/tale-hugo/'>Tale</a> theme.
+			</span>
+		</footer>
+
+    </body>
+</html>

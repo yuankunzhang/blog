@@ -4,7 +4,12 @@
   
   <url>
     <loc>https://yuankun.me/posts/</loc>
-    <lastmod>2020-03-14T09:41:41+08:00</lastmod>
+    <lastmod>2020-03-16T22:50:52+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</loc>
+    <lastmod>2020-03-16T22:50:52+08:00</lastmod>
   </url>
   
   <url>
@@ -13,7 +18,7 @@
   </url>
   
   <url>
-    <loc>https://yuankun.me/posts/publish-subdirectory-to-github-pages/</loc>
+    <loc>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</loc>
     <lastmod>2020-03-12T22:14:58+08:00</lastmod>
   </url>
   

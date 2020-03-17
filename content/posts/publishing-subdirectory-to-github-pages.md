@@ -1,5 +1,5 @@
 ---
-title: "Publish Subdirectory to Github Pages"
+title: "Publishing Subdirectory to Github Pages"
 date: 2020-03-12T22:14:58+08:00
 draft: false
 ---
