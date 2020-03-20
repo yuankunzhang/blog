@@ -1,7 +1,7 @@
 ---
 title: "Debug Linux Kernel With QEMU and GDB"
 date: 2020-03-20T09:31:33+08:00
-draft: true
+draft: false
 toc: false
 images:
 tags: 
