@@ -2,6 +2,9 @@
 title: "Running Alpine Linux in QEMU"
 date: 2020-03-14T09:41:41+08:00
 draft: false
+tags:
+  - linux
+  - qemu
 ---
 
 How to run a Linux operating system in QEMU.

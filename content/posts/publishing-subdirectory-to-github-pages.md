@@ -2,6 +2,8 @@
 title: "Publishing Subdirectory to Github Pages"
 date: 2020-03-12T22:14:58+08:00
 draft: false
+tags:
+  - github
 ---
 
 I'm using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the `public/` subdirectory stores the generated static pages:

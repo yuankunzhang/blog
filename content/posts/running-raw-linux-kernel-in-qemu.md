@@ -2,9 +2,12 @@
 title: "Running Raw Linux Kernel in QEMU"
 date: 2020-03-16T22:50:52+08:00
 draft: false
+tags:
+  - linux
+  - qemu
 ---
 
-In last post we see how to run a packed Linux distribution. This time let's check out how to run a raw Linux kernel in QEMU.
+In last post we see how to run a packed Linux distribution in QEMU. This time let's check out how to run a raw Linux kernel in QEMU.
 
 <!--more-->
 

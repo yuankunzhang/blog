@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Yuankun&#39;s Blog</title>
+    <link>https://yuankun.me/tags/linux/</link>
+    <description>Recent content in linux on Yuankun&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Mon, 16 Mar 2020 22:50:52 +0800</lastBuildDate>
+    
+	<atom:link href="https://yuankun.me/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Running Raw Linux Kernel in QEMU</title>
+      <link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link>
+      <pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
+      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Running Alpine Linux in QEMU</title>
+      <link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link>
+      <pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid>
+      <description>&lt;p&gt;How to run a Linux operating system in QEMU.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

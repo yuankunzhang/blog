@@ -18,7 +18,7 @@
       <pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
       
       <guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
-      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
     </item>
     
     <item>

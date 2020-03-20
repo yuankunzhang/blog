@@ -15,8 +15,8 @@
 			<pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
 			
 			<guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
-			<description>&lt;p&gt;In last post we see how to run a packed Linux distribution. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
-			<content type="html"><![CDATA[<p>In last post we see how to run a packed Linux distribution. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.</p>
+			<description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
+			<content type="html"><![CDATA[<p>In last post we see how to run a packed Linux distribution in QEMU. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.</p>
 <h2 id="initial-ramdisk-a-very-short-introduction">Initial ramdisk: a very short introduction</h2>
 <p>Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to bake all the device drivers into the kernel image. On my machine, the size of <code>vmlinuz-linux</code> is only 6.3 megabytes:</p>
 <div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ ls -lh /boot/vmlinuz-linux
