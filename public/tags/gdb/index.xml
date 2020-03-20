@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gdb on Yuankun&#39;s Blog</title>
+    <link>https://yuankun.me/tags/gdb/</link>
+    <description>Recent content in gdb on Yuankun&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Fri, 20 Mar 2020 09:31:33 +0800</lastBuildDate>
+    
+	<atom:link href="https://yuankun.me/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debug Linux Kernel With QEMU and GDB</title>
+      <link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
+      <pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
+      <description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -3,43 +3,53 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</loc>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/tags/gdb/</loc>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://yuankun.me/tags/linux/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/posts/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/tags/qemu/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/tags/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</loc>
+    <lastmod>2020-03-20T13:45:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/posts/running-alpine-linux-in-qemu/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:45:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/tags/github/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:45:38+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</loc>
-    <lastmod>2020-03-17T18:48:34+08:00</lastmod>
+    <lastmod>2020-03-20T13:45:38+08:00</lastmod>
   </url>
   
   <url>
