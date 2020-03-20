@@ -67,11 +67,11 @@ enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/func
 
 [menu]
   [[menu.main]]
-    name = "Posts"
+    name = "$ ls -l posts/"
     url = "posts/"
     weight = 10
 
   [[menu.main]]
-    name = "About"
-    url = "about/"
+    name = "$ whoami"
+    url = "whoami/"
     weight = 20
