@@ -13,6 +13,16 @@
     
     
     <item>
+      <title>GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior</title>
+      <link>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</link>
+      <pubDate>Sun, 22 Mar 2020 23:12:59 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</guid>
+      <description>As you may have already known, all the IPs of Google Cloud Platform share the same geolocation, which is the US. This buggy thing has been marked as &amp;ldquo;intended behavior&amp;rdquo;, so no fix would be expected in the future. Even ironically, the guy who raised this issue was &amp;ldquo;kindly advised&amp;rdquo; to contact Google&amp;rsquo;s legal department. Here is the issue ticket.
+Dear Google, when people create a network in a chosen region, they expect the public IPs of the network to be in that region.</description>
+    </item>
+    
+    <item>
       <title>Debug Linux Kernel With QEMU and GDB</title>
       <link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
       <pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>

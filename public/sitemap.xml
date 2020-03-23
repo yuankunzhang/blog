@@ -3,6 +3,26 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://yuankun.me/tags/gcp/</loc>
+    <lastmod>2020-03-22T23:12:59+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</loc>
+    <lastmod>2020-03-22T23:12:59+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/</loc>
+    <lastmod>2020-03-22T23:12:59+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/tags/</loc>
+    <lastmod>2020-03-22T23:12:59+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</loc>
     <lastmod>2020-03-20T13:46:14+08:00</lastmod>
   </url>
@@ -18,17 +38,7 @@
   </url>
   
   <url>
-    <loc>https://yuankun.me/posts/</loc>
-    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://yuankun.me/tags/qemu/</loc>
-    <lastmod>2020-03-20T13:46:14+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://yuankun.me/tags/</loc>
     <lastmod>2020-03-20T13:46:14+08:00</lastmod>
   </url>
   

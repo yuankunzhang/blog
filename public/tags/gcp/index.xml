@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gcp on Yuankun&#39;s Blog</title>
+    <link>https://yuankun.me/tags/gcp/</link>
+    <description>Recent content in gcp on Yuankun&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Sun, 22 Mar 2020 23:12:59 +0800</lastBuildDate>
+    
+	<atom:link href="https://yuankun.me/tags/gcp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior</title>
+      <link>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</link>
+      <pubDate>Sun, 22 Mar 2020 23:12:59 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</guid>
+      <description>As you may have already known, all the IPs of Google Cloud Platform share the same geolocation, which is the US. This buggy thing has been marked as &amp;ldquo;intended behavior&amp;rdquo;, so no fix would be expected in the future. Even ironically, the guy who raised this issue was &amp;ldquo;kindly advised&amp;rdquo; to contact Google&amp;rsquo;s legal department. Here is the issue ticket.
+Dear Google, when people create a network in a chosen region, they expect the public IPs of the network to be in that region.</description>
+    </item>
+    
+  </channel>
+</rss>
