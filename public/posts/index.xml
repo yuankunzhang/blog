@@ -6,8 +6,71 @@
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-		<lastBuildDate>Sun, 22 Mar 2020 23:12:59 +0800</lastBuildDate>
+		<lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate>
 		<atom:link href="https://yuankun.me/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>A Terraform Module to List Google Cloud Service Agents</title>
+			<link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
+			<pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
+			
+			<guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
+			<description>There are two types of service accounts in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.</description>
+			<content type="html"><![CDATA[<p>There are <a href="https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts">two types of service accounts</a> in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.</p>
+<p>A service agent has the following pattern:</p>
+<pre><code>service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
+</code></pre><p>You can spot the service agents from the IAM section of Google Cloud Console.</p>
+<p><img src="/img/20200402-0012.png" alt="Service Agents"></p>
+<p>When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&rsquo;ll show you a code snippet coming from one of our Terraform files (I&rsquo;m using <code>xxxxx</code> instead of the real project number).</p>
+<div class="highlight"><pre class="chroma"><code class="language-hcl" data-lang="hcl"><span class="k">data</span> <span class="s2">&#34;google_project&#34; &#34;project&#34;</span> {}
+
+<span class="k">resource</span> <span class="s2">&#34;google_project_iam_binding&#34; &#34;cloudbuild_service_agent&#34;</span> {
+<span class="n">  project</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">google_project</span><span class="p">.</span><span class="k">project</span><span class="p">.</span><span class="k">project_id</span>
+<span class="n">  role</span>    <span class="o">=</span> <span class="s2">&#34;roles/cloudbuild.serviceAgent&#34;</span>
+
+<span class="n">  members</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&#34;serviceAccount:service-xxxxx@gcp-sa-cloudbuild.iam.gserviceaccount.com&#34;</span><span class="p">,</span>
+  <span class="p">]</span>
+}
+
+<span class="k">resource</span> <span class="s2">&#34;google_project_iam_binding&#34; &#34;container_service_agent&#34;</span> {
+<span class="n">  project</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">google_project</span><span class="p">.</span><span class="k">project</span><span class="p">.</span><span class="k">project_id</span>
+<span class="n">  role</span>    <span class="o">=</span> <span class="s2">&#34;roles/container.serviceAgent&#34;</span>
+
+<span class="n">  members</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&#34;serviceAccount:service-xxxxx@container-engine-robot.iam.gserviceaccount.com&#34;</span><span class="p">,</span>
+  <span class="p">]</span>
+}
+</code></pre></div><p>When you are refering to service agents from other projects, things get even worse. Those project numbers look very much lick what we call &ldquo;the magic number&rdquo;.</p>
+<p>To tackle this, I wrote a simple Terraform module named <a href="https://github.com/yuankunzhang/google-cloud-service-agents">google-cloud-service-agents</a>. It consumes a project ID and exposes a list of service agents. With this module, the above code snippet can be rewritten to this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-hcl" data-lang="hcl"><span class="k">data</span> <span class="s2">&#34;google_project&#34; &#34;project&#34;</span> {}
+
+<span class="k">module</span> <span class="s2">&#34;agents&#34;</span> {
+<span class="n">  source</span> <span class="o">=</span> <span class="s2">&#34;/path/to/module&#34;</span>
+
+<span class="n">  project_number</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">google_project</span><span class="p">.</span><span class="k">project</span><span class="p">.</span><span class="k">number</span>
+}
+
+<span class="k">resource</span> <span class="s2">&#34;google_project_iam_binding&#34; &#34;cloudbuild_service_agent&#34;</span> {
+<span class="n">  project</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">google_project</span><span class="p">.</span><span class="k">project</span><span class="p">.</span><span class="k">project_id</span>
+<span class="n">  role</span>    <span class="o">=</span> <span class="s2">&#34;roles/cloudbuild.serviceAgent&#34;</span>
+
+<span class="n">  members</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&#34;serviceAccount:${module.agents.cloud_build}&#34;</span><span class="p">,</span>
+  <span class="p">]</span>
+}
+
+<span class="k">resource</span> <span class="s2">&#34;google_project_iam_binding&#34; &#34;container_service_agent&#34;</span> {
+<span class="n">  project</span> <span class="o">=</span> <span class="k">data</span><span class="p">.</span><span class="k">google_project</span><span class="p">.</span><span class="k">project</span><span class="p">.</span><span class="k">project_id</span>
+<span class="n">  role</span>    <span class="o">=</span> <span class="s2">&#34;roles/container.serviceAgent&#34;</span>
+
+<span class="n">  members</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&#34;serviceAccount:${module.agents.container_engine}&#34;</span><span class="p">,</span>
+  <span class="p">]</span>
+}
+</code></pre></div><p>For more information, please check out the <a href="https://github.com/yuankunzhang/google-cloud-service-agents">Github repository</a>.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior</title>

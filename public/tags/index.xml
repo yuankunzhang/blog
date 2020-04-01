@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sun, 22 Mar 2020 23:12:59 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate>
     
 	<atom:link href="https://yuankun.me/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,9 +15,18 @@
     <item>
       <title>gcp</title>
       <link>https://yuankun.me/tags/gcp/</link>
-      <pubDate>Sun, 22 Mar 2020 23:12:59 +0800</pubDate>
+      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
       
       <guid>https://yuankun.me/tags/gcp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>terraform</title>
+      <link>https://yuankun.me/tags/terraform/</link>
+      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
+      
+      <guid>https://yuankun.me/tags/terraform/</guid>
       <description></description>
     </item>
     

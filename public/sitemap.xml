@@ -3,22 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://yuankun.me/tags/gcp/</loc>
-    <lastmod>2020-03-24T00:29:28+08:00</lastmod>
+    <loc>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</loc>
+    <lastmod>2020-04-02T00:45:13+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</loc>
-    <lastmod>2020-03-24T00:29:28+08:00</lastmod>
+    <loc>https://yuankun.me/tags/gcp/</loc>
+    <lastmod>2020-04-02T00:45:13+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/posts/</loc>
-    <lastmod>2020-03-24T00:29:28+08:00</lastmod>
+    <lastmod>2020-04-02T00:45:13+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://yuankun.me/tags/</loc>
+    <lastmod>2020-04-02T00:45:13+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/tags/terraform/</loc>
+    <lastmod>2020-04-02T00:45:13+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</loc>
     <lastmod>2020-03-24T00:29:28+08:00</lastmod>
   </url>
   

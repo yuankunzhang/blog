@@ -13,6 +13,15 @@
     
     
     <item>
+      <title>A Terraform Module to List Google Cloud Service Agents</title>
+      <link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
+      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
+      <description>There are two types of service accounts in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.</description>
+    </item>
+    
+    <item>
       <title>GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior</title>
       <link>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</link>
       <pubDate>Sun, 22 Mar 2020 23:12:59 +0800</pubDate>
