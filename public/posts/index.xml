@@ -73,11 +73,11 @@
 		</item>
 		
 		<item>
-			<title>GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior</title>
-			<link>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</link>
+			<title>GCP IPs All Appear in US, and It Is an Intended Behavior</title>
+			<link>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-is-an-intended-behavior/</link>
 			<pubDate>Sun, 22 Mar 2020 23:12:59 +0800</pubDate>
 			
-			<guid>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-has-been-marked-as-intended-behavior/</guid>
+			<guid>https://yuankun.me/posts/gcp-ips-all-appear-in-us-and-it-is-an-intended-behavior/</guid>
 			<description>As you may have already known, all the IPs of Google Cloud Platform share the same geolocation, which is the US. This buggy thing has been marked as &amp;ldquo;intended behavior&amp;rdquo;, so no fix would be expected in the future. Even ironically, the guy who raised this issue was &amp;ldquo;kindly advised&amp;rdquo; to contact Google&amp;rsquo;s legal department. Here is the issue ticket.
 Dear Google, when people create a network in a chosen region, they expect the public IPs of the network to be in that region.</description>
 			<content type="html"><![CDATA[<p>As you may have already known, all the IPs of Google Cloud Platform share the same geolocation, which is the US. This buggy thing has been marked as &ldquo;intended behavior&rdquo;, so no fix would be expected in the future. Even ironically, the guy who raised this issue was &ldquo;kindly advised&rdquo; to contact Google&rsquo;s legal department. Here is the <a href="https://issuetracker.google.com/issues/112448138">issue ticket</a>.</p>
