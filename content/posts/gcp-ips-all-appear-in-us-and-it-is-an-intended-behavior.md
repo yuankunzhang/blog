@@ -1,5 +1,5 @@
 ---
-title: "GCP IPs All Appear in US, and It Has Been Marked as Intended Behavior"
+title: "GCP IPs All Appear in US, and It Is an Intended Behavior"
 date: 2020-03-22T23:12:59+08:00
 draft: false
 toc: false
