@@ -1,25 +1,75 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>gdb on Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/tags/gdb/</link>
-    <description>Recent content in gdb on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 20 Mar 2020 09:31:33 +0800</lastBuildDate>
-    
-	<atom:link href="https://yuankun.me/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Debug Linux Kernel With QEMU and GDB</title>
-      <link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
-      <pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
-      <description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>gdb on Yuankun&#39;s Blog</title>
+		<link>https://yuankun.me/tags/gdb/</link>
+		<description>Recent content in gdb on Yuankun&#39;s Blog</description>
+		<generator>Hugo 0.80.0 -- gohugo.io</generator>
+		<language>en-us</language>
+		<lastBuildDate>Fri, 20 Mar 2020 09:31:33 +0800</lastBuildDate>
+		<atom:link href="https://yuankun.me/tags/gdb/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>Debug Linux Kernel With QEMU and GDB</title>
+			<link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
+			<pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
+			<guid isPermaLink="true">https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
+			<description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;
+&lt;h2 id=&#34;compiling-the-kernel-with-debug-info&#34;&gt;Compiling the Kernel with Debug Info&lt;/h2&gt;
+&lt;p&gt;First thing we need to do is to prepare a kernel with debug info. Enter the TUI kernel configuration interface:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ cd linux-source/
+$ make menuconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter &amp;ldquo;Kernel hacking &amp;gt; Compile-time checks and compiler options&amp;rdquo;, and enable these two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Compile the kernel with debug info&lt;/li&gt;
+&lt;li&gt;Provide GDB scripts for kernel debugging&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://yuankun.me/img/provide-gdb-scripts-for-kernel-debugging.png&#34; alt=&#34;Provide GDB scripts for kernel debugging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Save the new configuration and compile the kernel by invoking &lt;code&gt;make -j8&lt;/code&gt;. After the compilation, we are interested in two newly created files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;vmlinux. This is the Linux Kernel in an statically linked executable file format with all debugging information.&lt;/li&gt;
+&lt;li&gt;scripts/gdb/vmlinux-gdb.py. This is the GDB script for kernel debugging.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s add the GDB script to the GDB init file so that the script gets loaded everytime we start GDB Debugger:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;add-auto-load-safe-path `pwd`/scripts/gdb/vmlinux-gdb.py&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.gdbinit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;start-a-debugging-session&#34;&gt;Start a Debugging Session&lt;/h2&gt;
+&lt;p&gt;QEMU provides two important options for debugging purpose:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;code&gt;-S&lt;/code&gt; option prevents the CPU from starting. This gives time for debugger to connect and allows to start debugging from the very beginning.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-s&lt;/code&gt; option starts a GDB Server on port 1234. Later in GDB Debugger we can connect to it with &lt;code&gt;target remote :1234&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now let&amp;rsquo;s boot the kernel with these options:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-system-x86_64 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -S &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -s &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -enable-kvm &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -kernel bzImage &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -smp cores&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1,threads&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -m &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -append &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;console=ttyS0 nokaslr selinux=0 debug&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -initrd initramfs.img &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -serial stdio &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -display none
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that the running of the process is feezed, because we have told QEMU to wait for debugger by using the &lt;code&gt;-S&lt;/code&gt; option.&lt;/p&gt;
+&lt;p&gt;In another terminal, start the GDB Debugger and connect it to QEMU:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ gdb vmlinux
+Type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;apropos word&amp;#34;&lt;/span&gt; to search &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; commands related to &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;...
+Reading symbols from vmlinux...
+&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; target remote :1234
+Remote debugging using :1234
+0x000000000000fff0 in exception_stacks &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we are able to set break points and trace the running of the kernel as if it is just a normal user application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; b start_kernel
+Note: breakpoints &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; and &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; also set at pc 0xffffffff829e0aa8.
+Breakpoint &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; at 0xffffffff829e0aa8: file init/main.c, line 786.
+&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; c
+Continuing.
+
+Thread &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; hit Breakpoint 1, start_kernel &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; at init/main.c:786
+&lt;span style=&#34;color:#ae81ff&#34;&gt;786&lt;/span&gt;     &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikibooks.org/wiki/QEMU/Debugging_with_QEMU&#34;&gt;Debugging with QEMU&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+		</item>
+	</channel>
 </rss>

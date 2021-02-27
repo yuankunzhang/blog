@@ -1,79 +1,60 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="theme-color" content="#494f5c">
-	<meta name="msapplication-TileColor" content="#494f5c">
-<meta itemprop="name" content="Running Alpine Linux in QEMU">
-<meta itemprop="description" content="How to run a Linux operating system in QEMU.">
-<meta itemprop="datePublished" content="2020-03-14T09:41:41&#43;08:00" />
-<meta itemprop="dateModified" content="2020-03-20T13:45:38&#43;08:00" />
-<meta itemprop="wordCount" content="463">
-
-
-
-<meta itemprop="keywords" content="linux,qemu," /><meta property="og:title" content="Running Alpine Linux in QEMU" />
-<meta property="og:description" content="How to run a Linux operating system in QEMU." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://yuankun.me/posts/running-alpine-linux-in-qemu/" />
-<meta property="article:published_time" content="2020-03-14T09:41:41+08:00" />
-<meta property="article:modified_time" content="2020-03-20T13:45:38+08:00" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Running Alpine Linux in QEMU"/>
-<meta name="twitter:description" content="How to run a Linux operating system in QEMU."/>
-
-	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-	<link rel="manifest" href="/site.webmanifest">
-	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-	<link rel="shortcut icon" href="/favicon.ico">
-
-	<title>Running Alpine Linux in QEMU</title>
-	<link rel="stylesheet" href="https://yuankun.me/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
-	
+  <meta charset="utf-8" />
+  <title>Running Alpine Linux in QEMU | Yuankun&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="How to run a Linux operating system in QEMU." />
+  <meta name="author" content="" />
+  <meta name="generator" content="Hugo 0.80.0" />
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Yuankun&#39;s Blog Feed" />
+  <link rel="stylesheet" href="/style.26447120a4cda1cd62469d7ea615a0c5207925f3347ad957e408b927f7f2b68f.css" />
+  <script defer src="/script.9df38729991a6ec08d83b60514e841529cebd5ccc800cf8e1f98fb63e73aaa73.js"></script>
 </head>
+<body>
+<div class="pure-g">
+  <div class="pure-u-1-24 pure-u-md-5-24"></div>
+  <div class="pure-u-22-24 pure-u-md-14-24">
+  
+<div class="navigation">
+  <div class="navigation-header clearfix">
+    <div class="pure-menu pure-menu-horizontal">
+      <a class="pure-menu-heading pure-menu-link" href="/">
+        Yuankun&#39;s Blog
+      </a>
+    </div>
+  </div>
+  <div class="navigation-content">
+    <div class="pure-menu pure-menu-horizontal">
+      <ul class="pure-menu-list">
+        <li class="pure-menu-item" title="All posts">
+          <a  class="pure-menu-link" href="/posts/">Posts</a>
+        </li>
+        <li class="pure-menu-item" title="All tags">
+          <a  class="pure-menu-link" href="/tags/">Tags</a>
+        </li>
+        <li class="pure-menu-item" title="Whoami">
+          <a  class="pure-menu-link" href="/whoami/">Whoami</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
 
-<body id="page">
-	
-	<header id="site-header" class="animated slideInUp faster">
-		<div class="hdr-wrapper section-inner">
-			<div class="hdr-left">
-				<div class="site-branding">
-					<a href="https://yuankun.me/">Yuankun&#39;s Blog</a>
-				</div>
-				<nav class="site-nav hide-in-mobile">
-					
-				<a href="https://yuankun.me/posts/">$ ls -l posts/</a>
-				<a href="https://yuankun.me/whoami/">$ whoami</a>
+  
+<div>
+  <div>
+    <h2 class="post-title">
+      
+      Running Alpine Linux in QEMU
+    </h2>
+    
 
-				</nav>
-			</div>
-			<div class="hdr-right hdr-icons">
-				<span class="hdr-social hide-in-mobile"><a href="https://github.com/yuankunzhang" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a><a href="https://www.linkedin.com/in/yuankun-zhang-b1415b116/" target="_blank" rel="noopener me" title="Linkedin"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a><a href="https://stackoverflow.com/users/756651/yuankun" target="_blank" rel="noopener me" title="Stackoverflow"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.913 16.041v6.848h17.599v-6.848M7.16 18.696h8.925M7.65 13.937l8.675 1.8M9.214 9.124l8.058 3.758M12.086 4.65l6.849 5.66M15.774 1.111l5.313 7.162"/></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
-			</div>
-		</div>
-	</header>
-	<div id="mobile-menu" class="animated fast">
-		<ul>
-			<li><a href="https://yuankun.me/posts/">$ ls -l posts/</a></li>
-			<li><a href="https://yuankun.me/whoami/">$ whoami</a></li>
-		</ul>
-	</div>
-
-
-	<main class="site-main section-inner animated fadeIn faster">
-		<article class="thin">
-			<header class="post-header">
-				<div class="post-meta"><span>Mar 14, 2020</span></div>
-				<h1>Running Alpine Linux in QEMU</h1>
-			</header>
-			<div class="content">
-				<p>How to run a Linux operating system in QEMU.</p>
-<h2 id="qemu-a-very-short-introduction">QEMU: a very short introduction<a href="#qemu-a-very-short-introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+  </div>
+  <div>
+    <p>How to run a Linux operating system in QEMU.</p>
+<h2 id="qemu-a-very-short-introduction">QEMU: a very short introduction</h2>
 <p>According to its <a href="https://www.qemu.org">official site</a>, QEMU is a generic and open source machine emulator and virtualizer.</p>
 <p>QEMU works in one of the two operating modes:</p>
 <ul>
@@ -86,19 +67,19 @@
 <li>Raw images (<code>.img</code>). This can be the fastest file-based format. If your file system supports holes, then only the written sectors will reserve space. Use <code>qemu-img info</code> or <code>ls -ls</code> to obtain the real size used by the image. Although raw images give optimal performance, only very basic features are available.</li>
 <li>QEMU copy on write (<code>.qcow2</code>). This is the most versatile format with advanced feature set. But the feature set comes at the cost of performance.</li>
 </ul>
-<h2 id="running-alpine-linux-in-qemu">Running Alpine Linux in QEMU<a href="#running-alpine-linux-in-qemu" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h2 id="running-alpine-linux-in-qemu">Running Alpine Linux in QEMU</h2>
 <p>Let&rsquo;s start by downloading the Alpine Linux installation media.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
 </code></pre></div><p>Create a virtual hard drive for the Linux machine. We declare the size to be 10G, but note that only the written sectors will reserve space. The actual size of this file is much smaller.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ qemu-img create -f qcow2 alpine.qcow2 10G
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ qemu-img create -f qcow2 alpine.qcow2 10G
 </code></pre></div><p>That&rsquo;s all we need for preparation. Now let&rsquo;s move on to boot the installation media.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ qemu-system-x86_64 <span class="se">\
-</span><span class="se"></span>    -enable-kvm <span class="se">\
-</span><span class="se"></span>    -m <span class="m">2048</span> <span class="se">\
-</span><span class="se"></span>    -smp <span class="nv">cores</span><span class="o">=</span>2,threads<span class="o">=</span><span class="m">4</span> <span class="se">\
-</span><span class="se"></span>    -nic user <span class="se">\
-</span><span class="se"></span>    -drive <span class="nv">file</span><span class="o">=</span>alpine.qcow2,media<span class="o">=</span>disk <span class="se">\
-</span><span class="se"></span>    -cdrom alpine-standard-3.11.3-x86_64.iso
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ qemu-system-x86_64 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">2048</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -smp cores<span style="color:#f92672">=</span>2,threads<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -nic user <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -drive file<span style="color:#f92672">=</span>alpine.qcow2,media<span style="color:#f92672">=</span>disk <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -cdrom alpine-standard-3.11.3-x86_64.iso
 </code></pre></div><ul>
 <li><code>-enable-kvm</code>: Make use of KVM when running a target architecture that is the same as the host architecture. The guest machine can then take advantage of the KVM acceleration.</li>
 <li><code>-m 2048</code>: Allocate 2GB memory to guest machine.</li>
@@ -108,54 +89,34 @@
 <li><code>-cdrom alpine-standard-3.11.3-x86_64.iso</code>: Attach a virtual CDROM drive and load Alpine Linux installation media into it.</li>
 </ul>
 <p>After installing Alpine Linux to the hard drive, we can boot without the <code>-cdrom</code> option.</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ qemu-system-x86_64 <span class="se">\
-</span><span class="se"></span>    -enable-kvm <span class="se">\
-</span><span class="se"></span>    -m <span class="m">2048</span> <span class="se">\
-</span><span class="se"></span>    -nic user <span class="se">\
-</span><span class="se"></span>    -drive <span class="nv">file</span><span class="o">=</span>alpine.qcow2,media<span class="o">=</span>disk
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ qemu-system-x86_64 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -enable-kvm <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -m <span style="color:#ae81ff">2048</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -nic user <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -drive file<span style="color:#f92672">=</span>alpine.qcow2,media<span style="color:#f92672">=</span>disk
 </code></pre></div><p>I&rsquo;m impressed by the flexibility and versatility of QEMU (of course this may come as a downside to some people because there are tons of options to choose).</p>
-			</div>
-
-			<hr class="post-end">
-			<footer class="post-info">
-				<p>
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://yuankun.me/tags/linux">linux</a></span><span class="tag"><a href="https://yuankun.me/tags/qemu">qemu</a></span>
-				</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>463 Words</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-03-14 09:41 &#43;0800</p>
-				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.01" y1="12" x2="22.96" y2="12"></line></svg><a href="https://github.com/yuankunzhang/blog/commit/d0da3cc786ed32b2b7888f6212c90d5fd4bc6bb7" target="_blank" rel="noopener">d0da3cc</a> @ 2020-03-20</p>
-			</footer>
-		</article>
-		<div class="post-nav thin">
-			<a class="next-post" href="https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/">
-				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;Newer</span><br><span>Running Raw Linux Kernel in QEMU</span>
-			</a>
-			<a class="prev-post" href="https://yuankun.me/posts/publishing-subdirectory-to-github-pages/">
-				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>Publishing Subdirectory to Github Pages</span>
-			</a>
-		</div>
-		<div id="comments" class="thin"><script src="https://utteranc.es/client.js"
-        repo="yuankunzhang/blog"
-        issue-term="pathname"
-        theme="github-dark"
-        crossorigin="anonymous"
-        async>
-</script>
+  </div>
 </div>
-	</main>
+  <div class="footer">
+  <div class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+      <li class="pure-menu-item" title="Theme repository">
+        <a class="pure-menu-link" href="https://github.com/yuankunzhang">GitHub</a>
+      </li>
+      <li class="pure-menu-item" title="RSS Feed">
+        <a href="/index.xml" class="pure-menu-link">RSS</a>
+      </li>
+      <li class="pure-menu-item fix-cursor-pointer" title="Go to top">
+        <a class="pure-menu-link" id="btn-gototop">
+          <span class="fix-placement-up">&#x21e7;&#xfe0e;</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
 
-	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2020 <a href="https://yuankun.me/">Yuankun Zhang</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
-		<p>
-			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://yuankun.me/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
-		</p>
-	</footer>
-
-
-
-	<script src="https://yuankun.me/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
-	
-
+  </div>
+  <div class="pure-u-1-24 pure-u-md-5-24"></div>
+</div>
 </body>
-
 </html>

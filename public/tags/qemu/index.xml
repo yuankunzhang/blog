@@ -1,43 +1,228 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>qemu on Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/tags/qemu/</link>
-    <description>Recent content in qemu on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 20 Mar 2020 09:31:33 +0800</lastBuildDate>
-    
-	<atom:link href="https://yuankun.me/tags/qemu/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Debug Linux Kernel With QEMU and GDB</title>
-      <link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
-      <pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
-      <description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Running Raw Linux Kernel in QEMU</title>
-      <link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link>
-      <pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
-      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Running Alpine Linux in QEMU</title>
-      <link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link>
-      <pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid>
-      <description>&lt;p&gt;How to run a Linux operating system in QEMU.&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>qemu on Yuankun&#39;s Blog</title>
+		<link>https://yuankun.me/tags/qemu/</link>
+		<description>Recent content in qemu on Yuankun&#39;s Blog</description>
+		<generator>Hugo 0.80.0 -- gohugo.io</generator>
+		<language>en-us</language>
+		<lastBuildDate>Fri, 20 Mar 2020 09:31:33 +0800</lastBuildDate>
+		<atom:link href="https://yuankun.me/tags/qemu/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>Debug Linux Kernel With QEMU and GDB</title>
+			<link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
+			<pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
+			<guid isPermaLink="true">https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
+			<description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;
+&lt;h2 id=&#34;compiling-the-kernel-with-debug-info&#34;&gt;Compiling the Kernel with Debug Info&lt;/h2&gt;
+&lt;p&gt;First thing we need to do is to prepare a kernel with debug info. Enter the TUI kernel configuration interface:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ cd linux-source/
+$ make menuconfig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Enter &amp;ldquo;Kernel hacking &amp;gt; Compile-time checks and compiler options&amp;rdquo;, and enable these two options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Compile the kernel with debug info&lt;/li&gt;
+&lt;li&gt;Provide GDB scripts for kernel debugging&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://yuankun.me/img/provide-gdb-scripts-for-kernel-debugging.png&#34; alt=&#34;Provide GDB scripts for kernel debugging&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Save the new configuration and compile the kernel by invoking &lt;code&gt;make -j8&lt;/code&gt;. After the compilation, we are interested in two newly created files:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;vmlinux. This is the Linux Kernel in an statically linked executable file format with all debugging information.&lt;/li&gt;
+&lt;li&gt;scripts/gdb/vmlinux-gdb.py. This is the GDB script for kernel debugging.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let&amp;rsquo;s add the GDB script to the GDB init file so that the script gets loaded everytime we start GDB Debugger:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;add-auto-load-safe-path `pwd`/scripts/gdb/vmlinux-gdb.py&amp;#34;&lt;/span&gt; &amp;gt;&amp;gt; ~/.gdbinit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;start-a-debugging-session&#34;&gt;Start a Debugging Session&lt;/h2&gt;
+&lt;p&gt;QEMU provides two important options for debugging purpose:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The &lt;code&gt;-S&lt;/code&gt; option prevents the CPU from starting. This gives time for debugger to connect and allows to start debugging from the very beginning.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;-s&lt;/code&gt; option starts a GDB Server on port 1234. Later in GDB Debugger we can connect to it with &lt;code&gt;target remote :1234&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now let&amp;rsquo;s boot the kernel with these options:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-system-x86_64 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -S &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -s &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -enable-kvm &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -kernel bzImage &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -smp cores&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1,threads&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -m &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -append &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;console=ttyS0 nokaslr selinux=0 debug&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -initrd initramfs.img &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -serial stdio &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -display none
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Note that the running of the process is feezed, because we have told QEMU to wait for debugger by using the &lt;code&gt;-S&lt;/code&gt; option.&lt;/p&gt;
+&lt;p&gt;In another terminal, start the GDB Debugger and connect it to QEMU:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ gdb vmlinux
+Type &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;apropos word&amp;#34;&lt;/span&gt; to search &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; commands related to &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;...
+Reading symbols from vmlinux...
+&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; target remote :1234
+Remote debugging using :1234
+0x000000000000fff0 in exception_stacks &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we are able to set break points and trace the running of the kernel as if it is just a normal user application:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; b start_kernel
+Note: breakpoints &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; and &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; also set at pc 0xffffffff829e0aa8.
+Breakpoint &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; at 0xffffffff829e0aa8: file init/main.c, line 786.
+&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gdb&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; c
+Continuing.
+
+Thread &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; hit Breakpoint 1, start_kernel &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; at init/main.c:786
+&lt;span style=&#34;color:#ae81ff&#34;&gt;786&lt;/span&gt;     &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://en.wikibooks.org/wiki/QEMU/Debugging_with_QEMU&#34;&gt;Debugging with QEMU&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+		</item>
+		<item>
+			<title>Running Raw Linux Kernel in QEMU</title>
+			<link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link>
+			<pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
+			<guid isPermaLink="true">https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
+			<description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;
+&lt;h2 id=&#34;initial-ramdisk-a-very-short-introduction&#34;&gt;Initial ramdisk: a very short introduction&lt;/h2&gt;
+&lt;p&gt;Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to bake all the device drivers into the kernel image. On my machine, the size of &lt;code&gt;vmlinuz-linux&lt;/code&gt; is only 6.3 megabytes:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ ls -lh /boot/vmlinuz-linux
+-rw-r--r-- &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; root root 6.3M Mar &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt; 21:30 /boot/vmlinuz-linux
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This raises the problem of detecting and loading the modules necessary to mount the root file system at boot time. It&amp;rsquo;s a chicken-and-egg problem. To further complicate the situation, the root file system may require special preparations to mount (for instance, it is on a encrypted partition).&lt;/p&gt;
+&lt;p&gt;Now comes the initial ramdisk as a temporary, ram-based root file system. It contains user-space utilities which detect hardwares, descover devices, load necessary modules, and mount the real root file system. Once it is loaded into memory, a simple but sufficient environment is set up for the Linux kernel to complete the boot process. This environment is often called &amp;ldquo;early user space&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;On my machine, the initial ramdisk image sits in the boot partition with the name &lt;code&gt;initramfs-linux.img&lt;/code&gt;. It is larger than the Linux kernel image:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ ls -lh /boot/initramfs-linux.img
+-rw-r--r-- &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; root root 9.4M Mar &lt;span style=&#34;color:#ae81ff&#34;&gt;15&lt;/span&gt; 21:30 /boot/initramfs-linux.img
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can inspect contents of the image by using command &lt;code&gt;lsinitcpio /boot/initramfs-linux.img&lt;/code&gt;. Indeed, it is a simplified root system with a bunch of helper tools:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ lsinitcpio /boot/initramfs-linux.img
+bin
+buildconfig
+config
+dev/
+etc/
+etc/fstab
+etc/initrd-release
+etc/ld.so.cache
+etc/ld.so.conf
+etc/modprobe.d/
+etc/mtab
+hooks/
+hooks/udev
+init
+init_functions
+lib
+lib64
+new_root/
+proc/
+run/
+sbin
+sys/
+tmp/
+usr/
+usr/bin/
+...
+var/
+var/run
+VERSION
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;making-an-initial-ramdisk&#34;&gt;Making an initial ramdisk&lt;/h2&gt;
+&lt;p&gt;The initial ramdisk creation command in Arch Linux is &lt;code&gt;mkinitcpio&lt;/code&gt;, and may defer in other distributions.&lt;/p&gt;
+&lt;p&gt;Quoting from man page of &lt;code&gt;mkinitcpio&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(mkinitcpio) creates an initial ramdisk environment for booting the Linux kernel. The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init. This makes it possible to have, for example, encrypted root filesystems and root filesystems on a software RAID array. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let&amp;rsquo;s go ahead and create the initial ramdisk.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ mkinitcpio -g initramfs.img
+&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&amp;gt; Starting build: 5.5.9-arch1-2
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;base&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;udev&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;autodetect&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;modconf&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;block&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;filesystems&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;keyboard&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+  -&amp;gt; Running build hook: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;fsck&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&amp;gt; Generating module dependencies
+&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&amp;gt; Creating gzip-compressed initcpio image: /home/yuankun/qemu-test/initramfs.img
+&lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt;&amp;gt; Image generation successful
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;configuring-and-building-the-linux-kernel&#34;&gt;Configuring and building the Linux kernel&lt;/h2&gt;
+&lt;p&gt;Clone the Linux source code, and configure the Linux kernel with &lt;code&gt;make ARCH=x86_64 menuconfig&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yuankun.me/img/linux-menuconfig.png&#34; alt=&#34;Menuconfig&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Save the configurations and exit the configuration interface, now let&amp;rsquo;s compile the kernel image. The compiled kernel image will be located at &lt;code&gt;arch/x86/boot/bzImage&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ make -j8
+...
+Setup is &lt;span style=&#34;color:#ae81ff&#34;&gt;13820&lt;/span&gt; bytes &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;padded to &lt;span style=&#34;color:#ae81ff&#34;&gt;13824&lt;/span&gt; bytes&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;.
+System is &lt;span style=&#34;color:#ae81ff&#34;&gt;8801&lt;/span&gt; kB
+CRC 52c54fbc
+Kernel: arch/x86/boot/bzImage is ready  &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#2)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;-j&lt;/code&gt; option specifies the number of jobs (commands) to run simultaneously. It&amp;rsquo;s a reasonable choice to match it with your available logical CPU cores.&lt;/p&gt;
+&lt;h2 id=&#34;booting-the-linux-kernel-in-qemu&#34;&gt;Booting the Linux kernel in QEMU&lt;/h2&gt;
+&lt;p&gt;Now that we have both the Kernel image and the initial ramdisk, it&amp;rsquo;s time to boot the Linux kernel in QEMU.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-system-x86_64 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -enable-kvm &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -kernel bzImage &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -smp cores&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;1,threads&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -m &lt;span style=&#34;color:#ae81ff&#34;&gt;1024&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -append &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;console=ttyS0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -initrd initramfs.img &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -serial stdio &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -display none
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; Linux version 5.6.0-rc6+ &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;yuankun@mars&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;gcc version 9.3.0 &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Arch Linux 9.3.0-1&lt;span style=&#34;color:#f92672&#34;&gt;))&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;#2 SMP Tue Mar 17 17:42:13 +08 2020&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; Command line: console&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ttyS0
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; x86/fpu: x87 FPU will use FXSAVE
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-provided physical RAM map:
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x0000000000000000-0x000000000009fbff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; usable
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x000000000009fc00-0x000000000009ffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; reserved
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x00000000000f0000-0x00000000000fffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; reserved
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x0000000000100000-0x000000007ffdffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; usable
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x000000007ffe0000-0x000000007fffffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; reserved
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x00000000feffc000-0x00000000feffffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; reserved
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; BIOS-e820: &lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;mem 0x00000000fffc0000-0x00000000ffffffff&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; reserved
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; NX &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Execute Disable&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; protection: active
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;    0.000000&lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt; SMBIOS 2.8 present.
+...
+&lt;span style=&#34;color:#f92672&#34;&gt;[&lt;/span&gt;rootfs &lt;span style=&#34;color:#f92672&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Soon you will find the &lt;code&gt;[rootfs] #&lt;/code&gt; prompt appearing, and cheers we are now in the environment provided by the initial ramdisk.&lt;/p&gt;</description>
+		</item>
+		<item>
+			<title>Running Alpine Linux in QEMU</title>
+			<link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link>
+			<pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate>
+			<guid isPermaLink="true">https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid>
+			<description>&lt;p&gt;How to run a Linux operating system in QEMU.&lt;/p&gt;
+&lt;h2 id=&#34;qemu-a-very-short-introduction&#34;&gt;QEMU: a very short introduction&lt;/h2&gt;
+&lt;p&gt;According to its &lt;a href=&#34;https://www.qemu.org&#34;&gt;official site&lt;/a&gt;, QEMU is a generic and open source machine emulator and virtualizer.&lt;/p&gt;
+&lt;p&gt;QEMU works in one of the two operating modes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Full system emulation&lt;/strong&gt;. In this mode, QEMU emulates a full system, including processors and peripherals. It can be used to launch virtual guest operating systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;User mode emulation&lt;/strong&gt;. In this mode, QEMU can launch processes that were compiled for a different instruction set.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Futhermore, you can provision the &lt;code&gt;-enable-kvm&lt;/code&gt; option to leverage Linux KVM. With this option, QEMU deals with the setting up and migration of KVM images and emulates hardwares, and the execution of the guest is done by KVM as requested by QEMU.&lt;/p&gt;
+&lt;p&gt;QEMU supports a long &lt;a href=&#34;https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-using_qemu_img-supported_qemu_img_formats&#34;&gt;list of disk image formats&lt;/a&gt;, including the most popular two:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Raw images (&lt;code&gt;.img&lt;/code&gt;). This can be the fastest file-based format. If your file system supports holes, then only the written sectors will reserve space. Use &lt;code&gt;qemu-img info&lt;/code&gt; or &lt;code&gt;ls -ls&lt;/code&gt; to obtain the real size used by the image. Although raw images give optimal performance, only very basic features are available.&lt;/li&gt;
+&lt;li&gt;QEMU copy on write (&lt;code&gt;.qcow2&lt;/code&gt;). This is the most versatile format with advanced feature set. But the feature set comes at the cost of performance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;running-alpine-linux-in-qemu&#34;&gt;Running Alpine Linux in QEMU&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s start by downloading the Alpine Linux installation media.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ wget http://dl-cdn.alpinelinux.org/alpine/v3.11/releases/x86_64/alpine-standard-3.11.3-x86_64.iso
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create a virtual hard drive for the Linux machine. We declare the size to be 10G, but note that only the written sectors will reserve space. The actual size of this file is much smaller.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-img create -f qcow2 alpine.qcow2 10G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s all we need for preparation. Now let&amp;rsquo;s move on to boot the installation media.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-system-x86_64 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -enable-kvm &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -m &lt;span style=&#34;color:#ae81ff&#34;&gt;2048&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -smp cores&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;2,threads&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -nic user &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -drive file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;alpine.qcow2,media&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;disk &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -cdrom alpine-standard-3.11.3-x86_64.iso
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-enable-kvm&lt;/code&gt;: Make use of KVM when running a target architecture that is the same as the host architecture. The guest machine can then take advantage of the KVM acceleration.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-m 2048&lt;/code&gt;: Allocate 2GB memory to guest machine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-smp cores=2,threads=4&lt;/code&gt;: Specify the number of CPU cores and threads to use.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-nic user&lt;/code&gt;: Add a virtual network interface controller to guest machine. More in this &lt;a href=&#34;https://www.qemu.org/2018/05/31/nic-parameter/&#34;&gt;article&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-drive file=alpine.qcow2,media=disk&lt;/code&gt;: Attach the newly created virtual hard drive to guest machine. The virtual hard drive will be mounted at &lt;code&gt;/dev/vda&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-cdrom alpine-standard-3.11.3-x86_64.iso&lt;/code&gt;: Attach a virtual CDROM drive and load Alpine Linux installation media into it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After installing Alpine Linux to the hard drive, we can boot without the &lt;code&gt;-cdrom&lt;/code&gt; option.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ qemu-system-x86_64 &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -enable-kvm &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -m &lt;span style=&#34;color:#ae81ff&#34;&gt;2048&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -nic user &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;    -drive file&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;alpine.qcow2,media&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;disk
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I&amp;rsquo;m impressed by the flexibility and versatility of QEMU (of course this may come as a downside to some people because there are tons of options to choose).&lt;/p&gt;</description>
+		</item>
+	</channel>
 </rss>

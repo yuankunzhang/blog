@@ -1,25 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>terraform on Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/tags/terraform/</link>
-    <description>Recent content in terraform on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate>
-    
-	<atom:link href="https://yuankun.me/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>A Terraform Module to List Google Cloud Service Agents</title>
-      <link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
-      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
-      <description>There are two types of service accounts in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.</description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>terraform on Yuankun&#39;s Blog</title>
+		<link>https://yuankun.me/tags/terraform/</link>
+		<description>Recent content in terraform on Yuankun&#39;s Blog</description>
+		<generator>Hugo 0.80.0 -- gohugo.io</generator>
+		<language>en-us</language>
+		<lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate>
+		<atom:link href="https://yuankun.me/tags/terraform/index.xml" rel="self" type="application/rss+xml" />
+		<item>
+			<title>A Terraform Module to List Google Cloud Service Agents</title>
+			<link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
+			<pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
+			<guid isPermaLink="true">https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
+			<description>&lt;p&gt;There are &lt;a href=&#34;https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts&#34;&gt;two types of service accounts&lt;/a&gt; in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.&lt;/p&gt;
+&lt;p&gt;A service agent has the following pattern:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can spot the service agents from the IAM section of Google Cloud Console.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yuankun.me/img/20200402-0012.png&#34; alt=&#34;Service Agents&#34;&gt;&lt;/p&gt;
+&lt;p&gt;When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&amp;rsquo;ll show you a code snippet coming from one of our Terraform files (I&amp;rsquo;m using &lt;code&gt;xxxxx&lt;/code&gt; instead of the real project number).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project&amp;#34; &amp;#34;project&amp;#34;&lt;/span&gt; {}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project_iam_binding&amp;#34; &amp;#34;cloudbuild_service_agent&amp;#34;&lt;/span&gt; {
+  project &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;google_project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project_id&lt;/span&gt;
+  role    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;roles/cloudbuild.serviceAgent&amp;#34;&lt;/span&gt;
+
+  members &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;serviceAccount:service-xxxxx@gcp-sa-cloudbuild.iam.gserviceaccount.com&amp;#34;&lt;/span&gt;,
+  ]
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project_iam_binding&amp;#34; &amp;#34;container_service_agent&amp;#34;&lt;/span&gt; {
+  project &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;google_project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project_id&lt;/span&gt;
+  role    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;roles/container.serviceAgent&amp;#34;&lt;/span&gt;
+
+  members &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;serviceAccount:service-xxxxx@container-engine-robot.iam.gserviceaccount.com&amp;#34;&lt;/span&gt;,
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When you are refering to service agents from other projects, things get even worse. Those project numbers look very much lick what we call &amp;ldquo;the magic number&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;To tackle this, I wrote a simple Terraform module named &lt;a href=&#34;https://github.com/yuankunzhang/google-cloud-service-agents&#34;&gt;google-cloud-service-agents&lt;/a&gt;. It consumes a project ID and exposes a list of service agents. With this module, the above code snippet can be rewritten to this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-hcl&#34; data-lang=&#34;hcl&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project&amp;#34; &amp;#34;project&amp;#34;&lt;/span&gt; {}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;module&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;agents&amp;#34;&lt;/span&gt; {
+  source &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/path/to/module&amp;#34;&lt;/span&gt;
+
+  project_number &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;google_project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project_iam_binding&amp;#34; &amp;#34;cloudbuild_service_agent&amp;#34;&lt;/span&gt; {
+  project &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;google_project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project_id&lt;/span&gt;
+  role    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;roles/cloudbuild.serviceAgent&amp;#34;&lt;/span&gt;
+
+  members &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;serviceAccount:${module.agents.cloud_build}&amp;#34;&lt;/span&gt;,
+  ]
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;resource&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;google_project_iam_binding&amp;#34; &amp;#34;container_service_agent&amp;#34;&lt;/span&gt; {
+  project &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;data&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;google_project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;project_id&lt;/span&gt;
+  role    &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;roles/container.serviceAgent&amp;#34;&lt;/span&gt;
+
+  members &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [
+    &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;serviceAccount:${module.agents.container_engine}&amp;#34;&lt;/span&gt;,
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For more information, please check out the &lt;a href=&#34;https://github.com/yuankunzhang/google-cloud-service-agents&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;
+</description>
+		</item>
+	</channel>
 </rss>

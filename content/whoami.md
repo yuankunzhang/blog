@@ -11,7 +11,7 @@ A DevOps Engineer.
 ## Me in the Holy Wars
 
 * Linux or Windows?
-  * Linux, ...and Mac.
+  * Linux.
 * Vim or Emacs?
   * Vim.
 * Bash or Zsh?
@@ -27,5 +27,4 @@ A DevOps Engineer.
 ## Me on the Web
 
 * [Github](https://github.com/yuankunzhang)
-* [LinkedIn](https://www.linkedin.com/in/yuankun-zhang-b1415b116/)
 * [StackOverflow](https://stackoverflow.com/users/756651/yuankun)
