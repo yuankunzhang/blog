@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>Yuankun&#x27;s Blog</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;yuankun.me&#x2F;site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Yuankun&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;yuankun.me">Yuankun&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+                        <div class="posts">
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;reinstall-os-on-dev-machine&#x2F;">Reinstall OS on My Dev Machine</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-07-07</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p>A few days ago, I had a <a href="/home-server-setup">home server setup</a>. Today I want to have a clean OS reinstallation on my development machine. The primary reason is that the root partition is almost full (due to a short-sightness when I first set the machine up). Apart from that, there are several other issues that I want to tackle:</p>
+<ul>
+<li>I got a lot of <code>__common_interrupt: 1.55 No irq handler for vector</code> errors during the system bootup. There's a thread in the Arch Forum on this issue. I tried booting up the system with different kernel parameters, but none helped. Seems like the only solution is to upgrade the BIOS firmware.</li>
+<li>I cannot use my bluetooth keyboard to input the root partition decryption key, because the bluetooth service is locked in the root partition. This is quite disturbing, everytime I restarted the machine, I had to plug in my USB wired keyboard just to type in the decryption key.</li>
+</ul>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;reinstall-os-on-dev-machine&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;home-server-setup&#x2F;">My Home Server Setup</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-06-21</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p>Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I've been planning to turn it into a home server. I want to use it primarily as a Samba Server. It also comes handy to run some self-hosted services like NextCloud.</p>
+<p>In this article I'll talk about the setup of this home server.</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;home-server-setup&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about&#x2F;">About Me</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-06-15</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;hello-world&#x2F;">Hello World!</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-06-14</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p>It is said that terrible sequences will occur if you do not start with a &quot;Hello World&quot;. So here we go.</p>
+<p>This site is built with <a href="https://www.getzola.org">Zola</a>. It is a bizarrely fast static site generator, you should try it.</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;hello-world&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                        </div>
+                        <nav class="pagination">
+                            
+                            
+                        </nav>
+                    
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;yuankun.me&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>

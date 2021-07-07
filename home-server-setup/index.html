@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>My Home Server Setup &middot; Yuankun&#x27;s Blog</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;yuankun.me&#x2F;site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">Yuankun&#x27;s Blog</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about">
+                            About
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;yuankun.me">Yuankun&#x27;s Blog</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me">
+                                    Home
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;yuankun.me&#x2F;about">
+                                    About
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+<article>
+  <h1>My Home Server Setup</h1>
+
+  
+    <p style="font-size:90%;">Posted on <time datetime="2021-06-21T00:00:00+00:00">June 21, 2021</time></p>
+  
+
+  <p>Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I've been planning to turn it into a home server. I want to use it primarily as a Samba Server. It also comes handy to run some self-hosted services like NextCloud.</p>
+<p>In this article I'll talk about the setup of this home server.</p>
+<span id="continue-reading"></span><h2 id="operating-system">Operating System</h2>
+<p>I've been using Arch Linux as my desktop OS for a long time, and I'm loving it. Though it's rare to hear people using Arch Linux as server OS, I'd like to give it a try. I will write a review after maybe six months or one year of running it. There are some features that I love the most about Arch Linux:</p>
+<ul>
+<li><strong>Minimal system out of the box</strong>. Arch Linux by default has almost nothing installed. You choose what to install.</li>
+<li><strong>Rolling release</strong>. This is what other distros like Debian or CentOS are missing. Because of the rolling release model, my server will be always on the latest everything. Well, it may be a concern that this rolling release model is a bit too aggressive and may introduce breaking changes. As I'm using it only for my home server, the risk is acceptable.</li>
+<li><strong>Excellent Wiki</strong>. There are detailed guides on almost everything you want to do with your system. Kudos to the community!</li>
+</ul>
+<h2 id="hardware">Hardware</h2>
+<p>Here are my hardware specifications.</p>
+<ul>
+<li>Motherboard: Gigabyte B360M AORUS Gaming 3</li>
+<li>CPU: Intel Core i5-8400 (6 cores, 12 threads)</li>
+<li>RAM: Vengeance LPX 8GB DDR4 DRAM 2400MHz x 4 (32GB in total)</li>
+<li>SSD: Samsung 980 PRO 1TB PCIe NVMe Gen4 SSD M.2</li>
+<li>HDD: Seagate IronWolf 4TB x 2</li>
+<li>GPU: Don't have one, don't need one.</li>
+</ul>
+<h2 id="goals">Goals</h2>
+<p>These are the goals I want to achieve with this server build.</p>
+<ul>
+<li><strong>No proprietary software (except the boot firmware)</strong>. I'll give <a href="https://libreboot.org/">Libreboot</a> a try later some time.</li>
+<li><strong>Full disk encryption (except the boot partition)</strong>.</li>
+<li><strong>Disk decryption via a remove SSH session</strong>. I don't want to plug in a keyboard and a screen every time I need to restart the server.</li>
+<li><strong>RAID 1 on the two HDDs</strong>. It will be used as the Samba storage partition.</li>
+</ul>
+<p>I'm not sure whether or not it's worth to setup the SSD as a cache for the RAID. For now I'm excluding it from my goals. It will be an interesting investigation for my future time.</p>
+<h2 id="disk-partitioning-and-encryption">Disk Partitioning and Encryption</h2>
+<p>Disk partitioning and encryption need to be done before the installation of the operating system.</p>
+<p>The 1TB SSD are split into two partitions: 1GB of the EFI system partition (mounted at <code>/boot</code>); and the root partition taking up the rest of the SSD.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1    2048    2099199    2097152     1G EFI System
+/dev/nvme0n1p2 2099200 1953525134 1951425935 930.5G Linux filesystem
+</span></code></pre>
+<p>The root partition is encrypted by <a href="https://wiki.archlinux.org/title/Dm-crypt">dm-crypt</a>.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;"># Encrypt the root partition.
+$ cryptsetup luksFormat /dev/nvme0n1p2
+
+# Open the encrypted root partition and mount it to /dev/mapper/root.
+$ cryptsetup open /dev/nvme0n1p2 root
+</span></code></pre>
+<p>The two HDDs are implemented as software RAID (level 1). I'm using <a href="https://wiki.archlinux.org/title/RAID#Installation">mdadm</a> for this purpose.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ mdadm --create --verbose --level=1 --metadata=1.2 --raid-devices=2 /dev/md0 /dev/sda1 /dev/sdb1
+</span></code></pre>
+<p>Here, <code>/dev/md0</code> is the logical RAID block device. It is, in turn, encrypted by dm-crypt. Below is the final layout of the HDDs.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;"># Encrypt the RAID block device.
+$ cryptsetup luksFormat /dev/md0
+
+# Open the RAID block device and mount it to /dev/mapper/nas.
+$ cryptsetup open /dev/md0 nas
+</span></code></pre>
+<p>Below is the final layout of my disks:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+sda           8:0    0   3.6T  0 disk
+└─sda1        8:1    0   3.6T  0 part
+  └─md0       9:0    0   3.6T  0 raid1
+    └─nas   254:1    0   3.6T  0 crypt /nas
+sdb           8:16   0   3.6T  0 disk
+└─sdb1        8:17   0   3.6T  0 part
+  └─md0       9:0    0   3.6T  0 raid1
+    └─nas   254:1    0   3.6T  0 crypt /nas
+nvme0n1     259:0    0 931.5G  0 disk
+├─nvme0n1p1 259:1    0     1G  0 part  /boot
+└─nvme0n1p2 259:2    0 930.5G  0 part
+  └─root    254:0    0 930.5G  0 crypt /
+</span></code></pre>
+<p>mdadm needs the <code>mdadm_udev</code> hook, we should add it to the <code>HOOKS</code> section in <code>/etc/mkinitcpio.conf</code>:</p>
+<h2 id="arch-linux-installation">Arch Linux Installation</h2>
+<p>Follow <a href="https://wiki.archlinux.org/title/installation_guide">the great Arch wiki</a> and we are all good.</p>
+<p>I'm using <a href="https://wiki.archlinux.org/title/Systemd-boot">systemd-boot</a> as the UEFI boot manager. The <code>CFG Lock</code> BIOS switch must be disabled. The installation is actually very simple:</p>
+<ol>
+<li>Mount the EFI system partition at <code>/boot</code>.</li>
+<li>Run <code>bootctl install</code> to install systemd-boot. This will copy systemd-boot to the EFI partition, and then set systemd-boot as the default EFI boot entry loaded by the EFI Boot manager.</li>
+<li>Create the bootloader entry. Two files are needed: <code>/boot/loader/loader.conf</code> and <code>/boot/loader/entries/arch.conf</code>.</li>
+</ol>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ cat &lt;&lt;EOF &gt; /boot/loader/loader.conf
+default arch.conf
+timeout 3
+console-mode max
+editor no
+EOF
+
+$ cat &lt;&lt;EOF &gt; /boot/loader/entries/arch.conf
+title Arch Linux
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=/dev/mapper/root
+EOF
+</span></code></pre><h2 id="root-partition-decryption-and-mounting">Root Partition Decryption and Mounting</h2>
+<p>One of the goals is for me to be able to remote unlock the LUKS-encrypted root partition. I'm using this mkinitcpio hook named <a href="https://github.com/random-archer/mkinitcpio-systemd-tool">systemd-tool</a>. It provides early remote SSH access before the root partition gets mounted.</p>
+<p>First, install systemd-tool and its dependencies.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ pacman -S mkinitcpio-systemd-tool busybox cryptsetup openssh tinyssh tinyssh-convert mc
+</span></code></pre>
+<p>It requires the <code>systemd-tool</code> hook. The final <code>HOOKS</code> section in <code>/etc/mkinitcpio.conf</code> looks like below.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-txt" data-lang="txt"><span style="color:#c0c5ce;">HOOKS=(base udev autodetect modconf block mdadm_udev filesystems keyboard fsck systemd systemd-tool)
+</span></code></pre>
+<p>After that, I need to configure <code>/etc/crypttab</code> and <code>/etc/mkinitcpio-systemd-tool/config/crypttab</code>.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ echo &quot;crypt UUID=$(blkid -s UUID -o value /dev/sdX2) none luks&quot; &gt; /etc/crypttab
+$ cat /etc/crypttab &gt; /etc/mkinitcpio-systemd-tool/config/crypttab
+</span></code></pre>
+<p>As well as <code>/etc/fstab</code> and <code>/etc/mkinitcpio-systemd-tool/config/fstab</code>.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ echo &quot;UUID=$(blkid -s UUID -o value /dev/mapper/root) /   ext4    rw,relatime 0 1&quot; &gt; /etc/fstab
+$ echo &quot;/dev/mapper/root    /sysroot    auto    x-systemd.device-timeout=9999h  0 1&quot; &gt; /etc/mkinitcpio-systemd-tool/config/fstab
+</span></code></pre>
+<p>Then, enable required services and build initramfs.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ systemctl enable initrd-cryptsetup.path
+$ systemctl enable initrd-tinysshd
+$ systemctl enable initrd-debug-progs
+$ systemctl enable initrd-sysroot-mount
+
+$ mkinitcpio -P
+</span></code></pre><h2 id="remote-unlocking">Remote Unlocking</h2>
+<p>After rebooting, the server now has a fancy remote shell running before the root partition gets mounted. This allows me to connect to the server remotely. A few things to note about this remote shell:</p>
+<ul>
+<li>The shell is a tinyssh service.</li>
+<li>Tinyssh only recognizes Ed25519 SSH key. So I need to generate an Ed25519 key pair on my local machine and paste the public key to <code>/root/.ssh/authorized_keys</code>.</li>
+<li>In this early stage, we can only connect as <code>root</code> user, because other users are not available yet.</li>
+</ul>
+<p>The root partition will automatically get decrypted and mounted after the decryption key is inputed into the prompt.</p>
+<p>I haven't talked about the decryption and mounting of the RAID device. It is actually less a problem. We can simply create a key file under <code>/etc/cryptsetup-keys.d/</code> (let's call it <code>nas.key</code>) and use this key file to decrypt the RAID device. Modify <code>/etc/crypttab</code> and <code>/etc/fstab</code> as described below and we are all set.</p>
+<pre style="background-color:#2b303b;">
+<code class="language-shell" data-lang="shell"><span style="color:#c0c5ce;">$ echo &quot;nas UUID=$(blkid -s UUID -o value /dev/md0) /etc/cryptsetup-keys.d/nas.key&quot; &gt;&gt; /etc/crypttab
+$ echo &quot;UUID=$(blkid -s UUID -o value /dev/mapper/nas) /nas   ext4    rw,relatime 0 1&quot; &gt;&gt; /etc/fstab
+</span></code></pre>
+</article>
+
+<br />
+
+<div class="utterances"></div>
+<script src="https://utteranc.es/client.js"
+        repo="yuankunzhang/blog"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;yuankun.me&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>
