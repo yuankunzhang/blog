@@ -10,6 +10,8 @@ Recently I got some retired computer hardware. Better than putting it in the cor
 
 In this article I'll talk about the setup of this home server.
 
+<!-- more -->
+
 ## Operating System
 
 I've been using Arch Linux as my desktop OS for a long time, and I'm loving it. Though it's rare to hear people using Arch Linux as server OS, I'd like to give it a try. I will write a review after maybe six months or one year of running it. There are some features that I love the most about Arch Linux:
