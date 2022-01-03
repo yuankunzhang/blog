@@ -1,0 +1,321 @@
+<!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>My Home Server Setup - Yuankun's Blog</title>
+<meta name=description content="Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.
+In this article I&rsquo;ll talk about my setup of this home server.">
+<meta name=author content="Yuankun Zhang"><script type=application/ld+json>{"@context":"http://schema.org","@type":"WebSite","name":"Yuankun\u0027s Blog","url":"https:\/\/yuankun.me"}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Organization","name":"","url":"https:\/\/yuankun.me"}</script>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/yuankun.me","name":"home"}},{"@type":"ListItem","position":3,"item":{"@id":"https:\/\/yuankun.me\/posts\/home-server-setup\/","name":"My home server setup"}}]}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Article","author":{"name":"Yuankun Zhang"},"headline":"My Home Server Setup","description":"Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I\u0026rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.\nIn this article I\u0026rsquo;ll talk about my setup of this home server.\n","inLanguage":"en","wordCount":1154,"datePublished":"2021-06-21T20:50:45","dateModified":"2021-06-21T20:50:45","image":"https:\/\/yuankun.me\/img\/avatar-icon.png","keywords":["linux, arch, luks, raid"],"mainEntityOfPage":"https:\/\/yuankun.me\/posts\/home-server-setup\/","publisher":{"@type":"Organization","name":"https:\/\/yuankun.me","logo":{"@type":"ImageObject","url":"https:\/\/yuankun.me\/img\/avatar-icon.png","height":60,"width":60}}}</script>
+<meta property="og:title" content="My Home Server Setup">
+<meta property="og:description" content="Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.
+In this article I&rsquo;ll talk about my setup of this home server.">
+<meta property="og:image" content="https://yuankun.me/img/avatar-icon.png">
+<meta property="og:url" content="https://yuankun.me/posts/home-server-setup/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Yuankun's Blog">
+<meta name=twitter:title content="My Home Server Setup">
+<meta name=twitter:description content="Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily …">
+<meta name=twitter:image content="https://yuankun.me/img/avatar-icon.png">
+<meta name=twitter:card content="summary">
+<link href=https://yuankun.me/img/favicon.ico rel=icon type=image/x-icon>
+<meta name=generator content="Hugo 0.91.2">
+<link rel=alternate href=https://yuankun.me/index.xml type=application/rss+xml title="Yuankun's Blog"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css integrity=sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y crossorigin=anonymous>
+<link rel=stylesheet href=https://use.fontawesome.com/releases/v5.5.0/css/all.css integrity=sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU crossorigin=anonymous>
+<link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css integrity=sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u crossorigin=anonymous><link rel=stylesheet href=https://yuankun.me/css/main.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+<link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+<link rel=stylesheet href=https://yuankun.me/css/highlight.min.css><link rel=stylesheet href=https://yuankun.me/css/codeblock.css><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css integrity=sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh crossorigin=anonymous>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css integrity=sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R crossorigin=anonymous>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+<div class=container-fluid>
+<div class=navbar-header>
+<button type=button class=navbar-toggle data-toggle=collapse data-target=#main-navbar>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+</button>
+<a class=navbar-brand href=https://yuankun.me>Yuankun's Blog</a>
+</div>
+<div class="collapse navbar-collapse" id=main-navbar>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a title=Blog href=/>Blog</a>
+</li>
+<li>
+<a title=About href=/page/about/>About</a>
+</li>
+<li>
+<a title=Tags href=/tags>Tags</a>
+</li>
+</ul>
+</div>
+<div class=avatar-container>
+<div class=avatar-img-border>
+<a title="Yuankun's Blog" href=https://yuankun.me>
+<img class=avatar-img src=https://yuankun.me/img/avatar-icon.png alt="Yuankun's Blog">
+</a>
+</div>
+</div>
+</div>
+</nav>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div>
+<header class=header-section>
+<div class="intro-header no-img">
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class=posts-heading>
+<h1>My Home Server Setup</h1>
+<hr class=small>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class=container role=main>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<article role=main class=blog-post>
+<p>Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.</p>
+<p>In this article I&rsquo;ll talk about my setup of this home server.</p>
+<h2 id=operating-system>Operating System</h2>
+<p>I&rsquo;ve been using Arch Linux as my desktop OS for a long time, and I&rsquo;m loving it (<a href="https://bbs.archlinux.org/viewtopic.php?id=115942">Why you should also try it</a>). Though it&rsquo;s rare to hear people using Arch Linux as server OS, I&rsquo;d like to give it a try. I will write a review after maybe six months or one year of running it. There are some features that I love the most about Arch Linux:</p>
+<ul>
+<li><strong>Minimal system out of the box</strong>. Arch Linux by default has almost nothing installed. You choose what to install.</li>
+<li><strong>Rolling release</strong>. This is what other distros like Debian or CentOS are missing. Because of the rolling release model, my server will be always on the latest everything. Well, it may be a concern that this rolling release model is a bit too aggressive and may introduce unstable features. As I&rsquo;m using it only for my home server, the risk is acceptable.</li>
+<li><strong>Excellent Wiki</strong>. There are detailed guides on almost everything you want to do with your system. Kudos to the community!</li>
+</ul>
+<h2 id=hardware>Hardware</h2>
+<p>Here are my hardware specifications.</p>
+<ul>
+<li>Motherboard: Gigabyte B360M AORUS Gaming 3</li>
+<li>CPU: Intel Core i5-8400 (6 cores, 12 threads)</li>
+<li>RAM: Vengeance LPX 8GB DDR4 DRAM 2400MHz x 4 (32GB in total)</li>
+<li>SSD: Samsung 980 PRO 1TB PCIe NVMe Gen4 SSD M.2</li>
+<li>HDD: Seagate IronWolf 4TB x 2</li>
+<li>GPU: Don&rsquo;t have one, don&rsquo;t need one.</li>
+</ul>
+<h2 id=goals>Goals</h2>
+<p>There are some goals that I want to achieve with this server build.</p>
+<ul>
+<li><strong>No proprietary software</strong>. Except the boot firmware for now. I&rsquo;ll give <a href=https://libreboot.org/>Libreboot</a> a try later some time.</li>
+<li><strong>Full disk encryption</strong>. Except the boot partition.</li>
+<li><strong>Disk decryption via a remove SSH session</strong>. I don&rsquo;t want to plug in a keyboard and a screen every time I need to restart the server.</li>
+<li><strong>RAID 1 on the two HDDs</strong>. It will be used as the Samba storage partition.</li>
+</ul>
+<p>I&rsquo;m not sure whether or not it&rsquo;s worth to setup the SSD as a cache for the RAID. For now I&rsquo;m excluding it from my goals. It will be an interesting investigation for future time.</p>
+<h2 id=disk-partitioning-and-encryption>Disk Partitioning and Encryption</h2>
+<p>Disk partitioning and encryption need to be done before the installation of the operating system.</p>
+<p>The 1TB SSD are split into two partitions: 1GB of the EFI system partition (mounted at <code>/boot</code>); and the root partition taking up the rest of the SSD.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Device           Start        End    Sectors   Size Type
+/dev/nvme0n1p1    <span class=m>2048</span>    <span class=m>2099199</span>    <span class=m>2097152</span>     1G EFI System
+/dev/nvme0n1p2 <span class=m>2099200</span> <span class=m>1953525134</span> <span class=m>1951425935</span> 930.5G Linux filesystem
+</code></pre></div><p>The root partition is encrypted by <a href=https://wiki.archlinux.org/title/Dm-crypt>dm-crypt</a>.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># Encrypt the root partition.</span>
+$ cryptsetup luksFormat /dev/nvme0n1p2
+
+<span class=c1># Open the encrypted root partition and mount it to /dev/mapper/root.</span>
+$ cryptsetup open /dev/nvme0n1p2 root
+</code></pre></div><p>The two HDDs are implemented as software RAID (level 1). I&rsquo;m using <a href=https://wiki.archlinux.org/title/RAID#Installation>mdadm</a> to manage it.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ mdadm --create --verbose --level<span class=o>=</span><span class=m>1</span> --metadata<span class=o>=</span>1.2 --raid-devices<span class=o>=</span><span class=m>2</span> /dev/md0 /dev/sda1 /dev/sdb1
+</code></pre></div><p>Here, <code>/dev/md0</code> is the logical RAID block device. It is, in turn, encrypted by dm-crypt. Below is the final layout of the HDDs.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># Encrypt the RAID block device.</span>
+$ cryptsetup luksFormat /dev/md0
+
+<span class=c1># Open the RAID block device and mount it to /dev/mapper/nas.</span>
+$ cryptsetup open /dev/md0 nas
+</code></pre></div><p>Below is the final layout of my disks:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ lsblk
+NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
+sda           8:0    <span class=m>0</span>   3.6T  <span class=m>0</span> disk
+└─sda1        8:1    <span class=m>0</span>   3.6T  <span class=m>0</span> part
+  └─md0       9:0    <span class=m>0</span>   3.6T  <span class=m>0</span> raid1
+    └─nas   254:1    <span class=m>0</span>   3.6T  <span class=m>0</span> crypt /nas
+sdb           8:16   <span class=m>0</span>   3.6T  <span class=m>0</span> disk
+└─sdb1        8:17   <span class=m>0</span>   3.6T  <span class=m>0</span> part
+  └─md0       9:0    <span class=m>0</span>   3.6T  <span class=m>0</span> raid1
+    └─nas   254:1    <span class=m>0</span>   3.6T  <span class=m>0</span> crypt /nas
+nvme0n1     259:0    <span class=m>0</span> 931.5G  <span class=m>0</span> disk
+├─nvme0n1p1 259:1    <span class=m>0</span>     1G  <span class=m>0</span> part  /boot
+└─nvme0n1p2 259:2    <span class=m>0</span> 930.5G  <span class=m>0</span> part
+  └─root    254:0    <span class=m>0</span> 930.5G  <span class=m>0</span> crypt /
+</code></pre></div><p>Mdadm needs the <code>mdadm_udev</code> hook, so we should add it to the <code>HOOKS</code> section in <code>/etc/mkinitcpio.conf</code>:</p>
+<h2 id=arch-linux-installation>Arch Linux Installation</h2>
+<p>Follow <a href=https://wiki.archlinux.org/title/installation_guide>the great Arch wiki</a> and we are all good.</p>
+<p>I&rsquo;m using <a href=https://wiki.archlinux.org/title/Systemd-boot>systemd-boot</a> as the UEFI boot manager. The <code>CFG Lock</code> BIOS switch must be disabled. The installation is actually very simple:</p>
+<ol>
+<li>Mount the EFI system partition at <code>/boot</code>.</li>
+<li>Run <code>bootctl install</code> to install systemd-boot. This will copy systemd-boot to the EFI partition, and then set systemd-boot as the default EFI boot entry loaded by the EFI Boot manager.</li>
+<li>Create the bootloader entry. Two files are needed: <code>/boot/loader/loader.conf</code> and <code>/boot/loader/entries/arch.conf</code>.</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat <span class=s>&lt;&lt;EOF &gt; /boot/loader/loader.conf
+</span><span class=s>default arch.conf
+</span><span class=s>timeout 3
+</span><span class=s>console-mode max
+</span><span class=s>editor no
+</span><span class=s>EOF</span>
+
+$ cat <span class=s>&lt;&lt;EOF &gt; /boot/loader/entries/arch.conf
+</span><span class=s>title Arch Linux
+</span><span class=s>linux /vmlinuz-linux
+</span><span class=s>initrd /initramfs-linux.img
+</span><span class=s>options root=/dev/mapper/root
+</span><span class=s>EOF</span>
+</code></pre></div><h2 id=root-partition-decryption-and-mounting>Root Partition Decryption and Mounting</h2>
+<p>One of the goals is for me to be able to remote unlock the LUKS-encrypted root partition. I&rsquo;m using this mkinitcpio hook named <a href=https://github.com/random-archer/mkinitcpio-systemd-tool>systemd-tool</a>. It provides early remote SSH access before the root partition gets mounted.</p>
+<p>First, install systemd-tool and its dependencies.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ pacman -S mkinitcpio-systemd-tool busybox cryptsetup openssh tinyssh tinyssh-convert mc
+</code></pre></div><p>It requires the <code>systemd-tool</code> hook. Add this hook in <code>/etc/mkinitcpio.conf</code>. The final <code>HOOKS</code> section in <code>/etc/mkinitcpio.conf</code> looks like below.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-txt data-lang=txt>HOOKS=(base udev autodetect modconf block mdadm_udev filesystems keyboard fsck systemd systemd-tool)
+</code></pre></div><p>After that, I need to configure <code>/etc/crypttab</code> and <code>/etc/mkinitcpio-systemd-tool/config/crypttab</code>.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ <span class=nb>echo</span> <span class=s2>&#34;crypt UUID=</span><span class=k>$(</span>blkid -s UUID -o value /dev/sdX2<span class=k>)</span><span class=s2> none luks&#34;</span> &gt; /etc/crypttab
+$ cat /etc/crypttab &gt; /etc/mkinitcpio-systemd-tool/config/crypttab
+</code></pre></div><p>As well as <code>/etc/fstab</code> and <code>/etc/mkinitcpio-systemd-tool/config/fstab</code>.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ <span class=nb>echo</span> <span class=s2>&#34;UUID=</span><span class=k>$(</span>blkid -s UUID -o value /dev/mapper/root<span class=k>)</span><span class=s2> /   ext4    rw,relatime 0 1&#34;</span> &gt; /etc/fstab
+$ <span class=nb>echo</span> <span class=s2>&#34;/dev/mapper/root    /sysroot    auto    x-systemd.device-timeout=9999h  0 1&#34;</span> &gt; /etc/mkinitcpio-systemd-tool/config/fstab
+</code></pre></div><p>Then, enable the required services and build initramfs.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ systemctl <span class=nb>enable</span> initrd-cryptsetup.path
+$ systemctl <span class=nb>enable</span> initrd-tinysshd
+$ systemctl <span class=nb>enable</span> initrd-debug-progs
+$ systemctl <span class=nb>enable</span> initrd-sysroot-mount
+
+$ mkinitcpio -P
+</code></pre></div><h2 id=remote-unlocking>Remote Unlocking</h2>
+<p>After rebooting, the server now has a fancy remote shell running before the root partition gets mounted. This allows me to connect to the server remotely. A few things to note about this remote shell:</p>
+<ul>
+<li>The shell is a tinyssh service.</li>
+<li>Tinyssh only recognizes Ed25519 SSH key. So I need to generate an Ed25519 key pair on my local machine and paste the public key to <code>/root/.ssh/authorized_keys</code>.</li>
+<li>In this early stage, we can only connect as <code>root</code> user, because other users are not available yet.</li>
+</ul>
+<p>The root partition will automatically get decrypted and mounted after the decryption key is typed into the prompt.</p>
+<p>I haven&rsquo;t talked about the decryption and mounting of the RAID device. It is actually less a problem. We can simply create a key file under <code>/etc/cryptsetup-keys.d/</code> (let&rsquo;s call it <code>nas.key</code>) and use this key file to decrypt the RAID device. Modify <code>/etc/crypttab</code> and <code>/etc/fstab</code> as described below and we are all set.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ <span class=nb>echo</span> <span class=s2>&#34;nas UUID=</span><span class=k>$(</span>blkid -s UUID -o value /dev/md0<span class=k>)</span><span class=s2> /etc/cryptsetup-keys.d/nas.key&#34;</span> &gt;&gt; /etc/crypttab
+$ <span class=nb>echo</span> <span class=s2>&#34;UUID=</span><span class=k>$(</span>blkid -s UUID -o value /dev/mapper/nas<span class=k>)</span><span class=s2> /nas   ext4    rw,relatime 0 1&#34;</span> &gt;&gt; /etc/fstab
+</code></pre></div>
+<div class=blog-tags>
+<a href=https://yuankun.me/tags/linux/>linux</a>&nbsp;
+<a href=https://yuankun.me/tags/arch/>arch</a>&nbsp;
+<a href=https://yuankun.me/tags/luks/>luks</a>&nbsp;
+<a href=https://yuankun.me/tags/raid/>raid</a>&nbsp;
+</div>
+<h4 class=see-also>See also</h4>
+<ul>
+<li><a href=/posts/dev-machine-setup/>My Dev Machine Setup</a></li>
+<li><a href=/posts/debug-linux-kernel-with-qemu-and-gdb/>Debug Linux Kernel With QEMU and GDB</a></li>
+<li><a href=/posts/running-raw-linux-kernel-in-qemu/>Running Raw Linux Kernel in QEMU</a></li>
+<li><a href=/posts/running-alpine-linux-in-qemu/>Running Alpine Linux in QEMU</a></li>
+</ul>
+</article>
+<ul class="pager blog-pager">
+<li class=previous>
+<a href=https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/ data-toggle=tooltip data-placement=top title="A Terraform Module to List Google Cloud Service Agents">&larr; Previous Post</a>
+</li>
+<li class=next>
+<a href=https://yuankun.me/posts/dev-machine-setup/ data-toggle=tooltip data-placement=top title="My Dev Machine Setup">Next Post &rarr;</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<footer>
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<ul class="list-inline text-center footer-links">
+<li>
+<a href=https://github.com/yuankunzhang title=GitHub>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://linkedin.com/in/yuankun-zhang-b1415b116 title=LinkedIn>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://stackoverflow.com/users/756651/yuankun title=StackOverflow>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href title=RSS>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+</ul>
+<p class="credits copyright text-muted">
+Yuankun Zhang
+&nbsp;&bull;&nbsp;&copy;
+2022
+&nbsp;&bull;&nbsp;
+<a href=https://yuankun.me>Yuankun's Blog</a>
+</p>
+<p class="credits theme-by text-muted">
+<a href=https://gohugo.io>Hugo v0.91.2</a> powered &nbsp;&bull;&nbsp; Theme <a href=https://github.com/halogenica/beautifulhugo>Beautiful Hugo</a> adapted from <a href=https://deanattali.com/beautiful-jekyll/>Beautiful Jekyll</a>
+</p>
+</div>
+</div>
+</div>
+</footer><script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js integrity=sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js integrity=sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe crossorigin=anonymous></script>
+<script src=https://code.jquery.com/jquery-1.12.4.min.js integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin=anonymous></script>
+<script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js integrity=sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa crossorigin=anonymous></script>
+<script src=https://yuankun.me/js/main.js></script>
+<script src=https://yuankun.me/js/highlight.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>$(document).ready(function(){$("pre.chroma").css("padding","0")})</script><script>renderMathInElement(document.body)</script><script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js integrity=sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js integrity=sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q crossorigin=anonymous></script><script src=https://yuankun.me/js/load-photoswipe.js></script>
+</body>
+</html>

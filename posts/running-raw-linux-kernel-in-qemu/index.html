@@ -1,0 +1,300 @@
+<!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Running Raw Linux Kernel in QEMU - Yuankun's Blog</title>
+<meta name=description content="In last post we see how to run a packed Linux distribution in QEMU. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.">
+<meta name=author content="Yuankun Zhang"><script type=application/ld+json>{"@context":"http://schema.org","@type":"WebSite","name":"Yuankun\u0027s Blog","url":"https:\/\/yuankun.me"}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Organization","name":"","url":"https:\/\/yuankun.me"}</script>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/yuankun.me","name":"home"}},{"@type":"ListItem","position":3,"item":{"@id":"https:\/\/yuankun.me\/posts\/running-raw-linux-kernel-in-qemu\/","name":"Running raw linux kernel in qemu"}}]}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Article","author":{"name":"Yuankun Zhang"},"headline":"Running Raw Linux Kernel in QEMU","description":"In last post we see how to run a packed Linux distribution in QEMU. This time let\u0026rsquo;s check out how to run a raw Linux kernel in QEMU.\n","inLanguage":"en","wordCount":730,"datePublished":"2020-03-16T22:50:52","dateModified":"2020-03-16T22:50:52","image":"https:\/\/yuankun.me\/img\/avatar-icon.png","keywords":["linux, qemu"],"mainEntityOfPage":"https:\/\/yuankun.me\/posts\/running-raw-linux-kernel-in-qemu\/","publisher":{"@type":"Organization","name":"https:\/\/yuankun.me","logo":{"@type":"ImageObject","url":"https:\/\/yuankun.me\/img\/avatar-icon.png","height":60,"width":60}}}</script>
+<meta property="og:title" content="Running Raw Linux Kernel in QEMU">
+<meta property="og:description" content="In last post we see how to run a packed Linux distribution in QEMU. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.">
+<meta property="og:image" content="https://yuankun.me/img/avatar-icon.png">
+<meta property="og:url" content="https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Yuankun's Blog">
+<meta name=twitter:title content="Running Raw Linux Kernel in QEMU">
+<meta name=twitter:description content="In last post we see how to run a packed Linux distribution in QEMU. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.">
+<meta name=twitter:image content="https://yuankun.me/img/avatar-icon.png">
+<meta name=twitter:card content="summary">
+<link href=https://yuankun.me/img/favicon.ico rel=icon type=image/x-icon>
+<meta name=generator content="Hugo 0.91.2">
+<link rel=alternate href=https://yuankun.me/index.xml type=application/rss+xml title="Yuankun's Blog"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css integrity=sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y crossorigin=anonymous>
+<link rel=stylesheet href=https://use.fontawesome.com/releases/v5.5.0/css/all.css integrity=sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU crossorigin=anonymous>
+<link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css integrity=sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u crossorigin=anonymous><link rel=stylesheet href=https://yuankun.me/css/main.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+<link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+<link rel=stylesheet href=https://yuankun.me/css/highlight.min.css><link rel=stylesheet href=https://yuankun.me/css/codeblock.css><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css integrity=sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh crossorigin=anonymous>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css integrity=sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R crossorigin=anonymous>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+<div class=container-fluid>
+<div class=navbar-header>
+<button type=button class=navbar-toggle data-toggle=collapse data-target=#main-navbar>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+</button>
+<a class=navbar-brand href=https://yuankun.me>Yuankun's Blog</a>
+</div>
+<div class="collapse navbar-collapse" id=main-navbar>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a title=Blog href=/>Blog</a>
+</li>
+<li>
+<a title=About href=/page/about/>About</a>
+</li>
+<li>
+<a title=Tags href=/tags>Tags</a>
+</li>
+</ul>
+</div>
+<div class=avatar-container>
+<div class=avatar-img-border>
+<a title="Yuankun's Blog" href=https://yuankun.me>
+<img class=avatar-img src=https://yuankun.me/img/avatar-icon.png alt="Yuankun's Blog">
+</a>
+</div>
+</div>
+</div>
+</nav>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div>
+<header class=header-section>
+<div class="intro-header no-img">
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class=posts-heading>
+<h1>Running Raw Linux Kernel in QEMU</h1>
+<hr class=small>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class=container role=main>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<article role=main class=blog-post>
+<p>In last post we see how to run a packed Linux distribution in QEMU. This time let&rsquo;s check out how to run a raw Linux kernel in QEMU.</p>
+<h2 id=initial-ramdisk-a-very-short-introduction>Initial ramdisk: a very short introduction</h2>
+<p>Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to bake all the device drivers into the kernel image. On my machine, the size of <code>vmlinuz-linux</code> is only 6.3 megabytes:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ ls -lh /boot/vmlinuz-linux
+-rw-r--r-- <span class=m>1</span> root root 6.3M Mar <span class=m>15</span> 21:30 /boot/vmlinuz-linux
+</code></pre></div><p>This raises the problem of detecting and loading the modules necessary to mount the root file system at boot time. It&rsquo;s a chicken-and-egg problem. To further complicate the situation, the root file system may require special preparations to mount (for instance, it is on a encrypted partition).</p>
+<p>Now comes the initial ramdisk as a temporary, ram-based root file system. It contains user-space utilities which detect hardwares, descover devices, load necessary modules, and mount the real root file system. Once it is loaded into memory, a simple but sufficient environment is set up for the Linux kernel to complete the boot process. This environment is often called &ldquo;early user space&rdquo;.</p>
+<p>On my machine, the initial ramdisk image sits in the boot partition with the name <code>initramfs-linux.img</code>. It is larger than the Linux kernel image:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ ls -lh /boot/initramfs-linux.img
+-rw-r--r-- <span class=m>1</span> root root 9.4M Mar <span class=m>15</span> 21:30 /boot/initramfs-linux.img
+</code></pre></div><p>We can inspect contents of the image by using command <code>lsinitcpio /boot/initramfs-linux.img</code>. Indeed, it is a simplified root system with a bunch of helper tools:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ lsinitcpio /boot/initramfs-linux.img
+bin
+buildconfig
+config
+dev/
+etc/
+etc/fstab
+etc/initrd-release
+etc/ld.so.cache
+etc/ld.so.conf
+etc/modprobe.d/
+etc/mtab
+hooks/
+hooks/udev
+init
+init_functions
+lib
+lib64
+new_root/
+proc/
+run/
+sbin
+sys/
+tmp/
+usr/
+usr/bin/
+...
+var/
+var/run
+VERSION
+</code></pre></div><h2 id=making-an-initial-ramdisk>Making an initial ramdisk</h2>
+<p>The initial ramdisk creation command in Arch Linux is <code>mkinitcpio</code>, and may defer in other distributions.</p>
+<p>Quoting from man page of <code>mkinitcpio</code>:</p>
+<blockquote>
+<p>(mkinitcpio) creates an initial ramdisk environment for booting the Linux kernel. The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init. This makes it possible to have, for example, encrypted root filesystems and root filesystems on a software RAID array. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features.</p>
+</blockquote>
+<p>Let&rsquo;s go ahead and create the initial ramdisk.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ mkinitcpio -g initramfs.img
+<span class=o>==</span>&gt; Starting build: 5.5.9-arch1-2
+  -&gt; Running build hook: <span class=o>[</span>base<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>udev<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>autodetect<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>modconf<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>block<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>filesystems<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>keyboard<span class=o>]</span>
+  -&gt; Running build hook: <span class=o>[</span>fsck<span class=o>]</span>
+<span class=o>==</span>&gt; Generating module <span class=nv>dependencies</span>
+<span class=o>==</span>&gt; Creating gzip-compressed initcpio image: /home/yuankun/qemu-test/initramfs.img
+<span class=o>==</span>&gt; Image generation successful
+</code></pre></div><h2 id=configuring-and-building-the-linux-kernel>Configuring and building the Linux kernel</h2>
+<p>Clone the Linux source code, and configure the Linux kernel with <code>make ARCH=x86_64 menuconfig</code>.</p>
+<p><img src=/img/linux-menuconfig.png alt=Menuconfig></p>
+<p>Save the configurations and exit the configuration interface, now let&rsquo;s compile the kernel image. The compiled kernel image will be located at <code>arch/x86/boot/bzImage</code>.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ make -j8
+...
+Setup is <span class=m>13820</span> bytes <span class=o>(</span>padded to <span class=m>13824</span> bytes<span class=o>)</span>.
+System is <span class=m>8801</span> kB
+CRC 52c54fbc
+Kernel: arch/x86/boot/bzImage is ready  <span class=o>(</span><span class=c1>#2)</span>
+</code></pre></div><p>The <code>-j</code> option specifies the number of jobs (commands) to run simultaneously. It&rsquo;s a reasonable choice to match it with your available logical CPU cores.</p>
+<h2 id=booting-the-linux-kernel-in-qemu>Booting the Linux kernel in QEMU</h2>
+<p>Now that we have both the Kernel image and the initial ramdisk, it&rsquo;s time to boot the Linux kernel in QEMU.</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ qemu-system-x86_64 <span class=se>\
+</span><span class=se></span>    -enable-kvm <span class=se>\
+</span><span class=se></span>    -kernel bzImage <span class=se>\
+</span><span class=se></span>    -smp <span class=nv>cores</span><span class=o>=</span>1,threads<span class=o>=</span><span class=m>2</span> <span class=se>\
+</span><span class=se></span>    -m <span class=m>1024</span> <span class=se>\
+</span><span class=se></span>    -append <span class=s2>&#34;console=ttyS0&#34;</span> <span class=se>\
+</span><span class=se></span>    -initrd initramfs.img <span class=se>\
+</span><span class=se></span>    -serial stdio <span class=se>\
+</span><span class=se></span>    -display none
+<span class=o>[</span>    0.000000<span class=o>]</span> Linux version 5.6.0-rc6+ <span class=o>(</span>yuankun@mars<span class=o>)</span> <span class=o>(</span>gcc version 9.3.0 <span class=o>(</span>Arch Linux 9.3.0-1<span class=o>))</span> <span class=c1>#2 SMP Tue Mar 17 17:42:13 +08 2020</span>
+<span class=o>[</span>    0.000000<span class=o>]</span> Command line: <span class=nv>console</span><span class=o>=</span>ttyS0
+<span class=o>[</span>    0.000000<span class=o>]</span> x86/fpu: x87 FPU will use FXSAVE
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-provided physical RAM map:
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x0000000000000000-0x000000000009fbff<span class=o>]</span> usable
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x000000000009fc00-0x000000000009ffff<span class=o>]</span> reserved
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x00000000000f0000-0x00000000000fffff<span class=o>]</span> reserved
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x0000000000100000-0x000000007ffdffff<span class=o>]</span> usable
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x000000007ffe0000-0x000000007fffffff<span class=o>]</span> reserved
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x00000000feffc000-0x00000000feffffff<span class=o>]</span> reserved
+<span class=o>[</span>    0.000000<span class=o>]</span> BIOS-e820: <span class=o>[</span>mem 0x00000000fffc0000-0x00000000ffffffff<span class=o>]</span> reserved
+<span class=o>[</span>    0.000000<span class=o>]</span> NX <span class=o>(</span>Execute Disable<span class=o>)</span> protection: active
+<span class=o>[</span>    0.000000<span class=o>]</span> SMBIOS 2.8 present.
+...
+<span class=o>[</span>rootfs <span class=o>]</span><span class=c1>#</span>
+</code></pre></div><p>Soon you will find the <code>[rootfs] #</code> prompt appearing, and cheers we are now in the environment provided by the initial ramdisk.</p>
+<div class=blog-tags>
+<a href=https://yuankun.me/tags/linux/>linux</a>&nbsp;
+<a href=https://yuankun.me/tags/qemu/>qemu</a>&nbsp;
+</div>
+<h4 class=see-also>See also</h4>
+<ul>
+<li><a href=/posts/dev-machine-setup/>My Dev Machine Setup</a></li>
+<li><a href=/posts/home-server-setup/>My Home Server Setup</a></li>
+<li><a href=/posts/debug-linux-kernel-with-qemu-and-gdb/>Debug Linux Kernel With QEMU and GDB</a></li>
+<li><a href=/posts/running-alpine-linux-in-qemu/>Running Alpine Linux in QEMU</a></li>
+</ul>
+</article>
+<ul class="pager blog-pager">
+<li class=previous>
+<a href=https://yuankun.me/posts/running-alpine-linux-in-qemu/ data-toggle=tooltip data-placement=top title="Running Alpine Linux in QEMU">&larr; Previous Post</a>
+</li>
+<li class=next>
+<a href=https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/ data-toggle=tooltip data-placement=top title="Debug Linux Kernel With QEMU and GDB">Next Post &rarr;</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<footer>
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<ul class="list-inline text-center footer-links">
+<li>
+<a href=https://github.com/yuankunzhang title=GitHub>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://linkedin.com/in/yuankun-zhang-b1415b116 title=LinkedIn>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://stackoverflow.com/users/756651/yuankun title=StackOverflow>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href title=RSS>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+</ul>
+<p class="credits copyright text-muted">
+Yuankun Zhang
+&nbsp;&bull;&nbsp;&copy;
+2022
+&nbsp;&bull;&nbsp;
+<a href=https://yuankun.me>Yuankun's Blog</a>
+</p>
+<p class="credits theme-by text-muted">
+<a href=https://gohugo.io>Hugo v0.91.2</a> powered &nbsp;&bull;&nbsp; Theme <a href=https://github.com/halogenica/beautifulhugo>Beautiful Hugo</a> adapted from <a href=https://deanattali.com/beautiful-jekyll/>Beautiful Jekyll</a>
+</p>
+</div>
+</div>
+</div>
+</footer><script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js integrity=sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js integrity=sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe crossorigin=anonymous></script>
+<script src=https://code.jquery.com/jquery-1.12.4.min.js integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin=anonymous></script>
+<script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js integrity=sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa crossorigin=anonymous></script>
+<script src=https://yuankun.me/js/main.js></script>
+<script src=https://yuankun.me/js/highlight.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>$(document).ready(function(){$("pre.chroma").css("padding","0")})</script><script>renderMathInElement(document.body)</script><script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js integrity=sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js integrity=sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q crossorigin=anonymous></script><script src=https://yuankun.me/js/load-photoswipe.js></script>
+</body>
+</html>

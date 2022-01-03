@@ -1,0 +1,260 @@
+<!doctype html><html lang=en itemscope itemtype=http://schema.org/WebPage>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Debug Linux Kernel With QEMU and GDB - Yuankun's Blog</title>
+<meta name=description content="In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&rsquo;s see how to leverage this feature to debug the Linux kernel.">
+<meta name=author content="Yuankun Zhang"><script type=application/ld+json>{"@context":"http://schema.org","@type":"WebSite","name":"Yuankun\u0027s Blog","url":"https:\/\/yuankun.me"}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Organization","name":"","url":"https:\/\/yuankun.me"}</script>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"@id":"https:\/\/yuankun.me","name":"home"}},{"@type":"ListItem","position":3,"item":{"@id":"https:\/\/yuankun.me\/posts\/debug-linux-kernel-with-qemu-and-gdb\/","name":"Debug linux kernel with qemu and gdb"}}]}</script><script type=application/ld+json>{"@context":"http://schema.org","@type":"Article","author":{"name":"Yuankun Zhang"},"headline":"Debug Linux Kernel With QEMU and GDB","description":"In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let\u0026rsquo;s see how to leverage this feature to debug the Linux kernel.\n","inLanguage":"en","wordCount":418,"datePublished":"2020-03-20T09:31:33","dateModified":"2020-03-20T09:31:33","image":"https:\/\/yuankun.me\/img\/avatar-icon.png","keywords":["linux, qemu, gdb"],"mainEntityOfPage":"https:\/\/yuankun.me\/posts\/debug-linux-kernel-with-qemu-and-gdb\/","publisher":{"@type":"Organization","name":"https:\/\/yuankun.me","logo":{"@type":"ImageObject","url":"https:\/\/yuankun.me\/img\/avatar-icon.png","height":60,"width":60}}}</script>
+<meta property="og:title" content="Debug Linux Kernel With QEMU and GDB">
+<meta property="og:description" content="In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&rsquo;s see how to leverage this feature to debug the Linux kernel.">
+<meta property="og:image" content="https://yuankun.me/img/avatar-icon.png">
+<meta property="og:url" content="https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Yuankun's Blog">
+<meta name=twitter:title content="Debug Linux Kernel With QEMU and GDB">
+<meta name=twitter:description content="In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable …">
+<meta name=twitter:image content="https://yuankun.me/img/avatar-icon.png">
+<meta name=twitter:card content="summary">
+<link href=https://yuankun.me/img/favicon.ico rel=icon type=image/x-icon>
+<meta name=generator content="Hugo 0.91.2">
+<link rel=alternate href=https://yuankun.me/index.xml type=application/rss+xml title="Yuankun's Blog"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css integrity=sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y crossorigin=anonymous>
+<link rel=stylesheet href=https://use.fontawesome.com/releases/v5.5.0/css/all.css integrity=sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU crossorigin=anonymous>
+<link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css integrity=sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u crossorigin=anonymous><link rel=stylesheet href=https://yuankun.me/css/main.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+<link rel=stylesheet href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+<link rel=stylesheet href=https://yuankun.me/css/highlight.min.css><link rel=stylesheet href=https://yuankun.me/css/codeblock.css><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css integrity=sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh crossorigin=anonymous>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css integrity=sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R crossorigin=anonymous>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+<div class=container-fluid>
+<div class=navbar-header>
+<button type=button class=navbar-toggle data-toggle=collapse data-target=#main-navbar>
+<span class=sr-only>Toggle navigation</span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+<span class=icon-bar></span>
+</button>
+<a class=navbar-brand href=https://yuankun.me>Yuankun's Blog</a>
+</div>
+<div class="collapse navbar-collapse" id=main-navbar>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a title=Blog href=/>Blog</a>
+</li>
+<li>
+<a title=About href=/page/about/>About</a>
+</li>
+<li>
+<a title=Tags href=/tags>Tags</a>
+</li>
+</ul>
+</div>
+<div class=avatar-container>
+<div class=avatar-img-border>
+<a title="Yuankun's Blog" href=https://yuankun.me>
+<img class=avatar-img src=https://yuankun.me/img/avatar-icon.png alt="Yuankun's Blog">
+</a>
+</div>
+</div>
+</div>
+</nav>
+<div class=pswp tabindex=-1 role=dialog aria-hidden=true>
+<div class=pswp__bg></div>
+<div class=pswp__scroll-wrap>
+<div class=pswp__container>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+<div class=pswp__item></div>
+</div>
+<div class="pswp__ui pswp__ui--hidden">
+<div class=pswp__top-bar>
+<div class=pswp__counter></div>
+<button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+<div class=pswp__preloader>
+<div class=pswp__preloader__icn>
+<div class=pswp__preloader__cut>
+<div class=pswp__preloader__donut></div>
+</div>
+</div>
+</div>
+</div>
+<div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+<div class=pswp__share-tooltip></div>
+</div>
+<button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+</button>
+<div class=pswp__caption>
+<div class=pswp__caption__center></div>
+</div>
+</div>
+</div>
+</div>
+<header class=header-section>
+<div class="intro-header no-img">
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class=posts-heading>
+<h1>Debug Linux Kernel With QEMU and GDB</h1>
+<hr class=small>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class=container role=main>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<article role=main class=blog-post>
+<p>In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&rsquo;s see how to leverage this feature to debug the Linux kernel.</p>
+<h2 id=compiling-the-kernel-with-debug-info>Compiling the Kernel with Debug Info</h2>
+<p>First thing we need to do is to prepare a kernel with debug info. Enter the TUI kernel configuration interface:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>cd</span> linux-source/
+$ make menuconfig
+</code></pre></div><p>Enter &ldquo;Kernel hacking > Compile-time checks and compiler options&rdquo;, and enable these two options:</p>
+<ul>
+<li>Compile the kernel with debug info</li>
+<li>Provide GDB scripts for kernel debugging</li>
+</ul>
+<p><img src=/img/provide-gdb-scripts-for-kernel-debugging.png alt="Provide GDB scripts for kernel debugging"></p>
+<p>Save the new configuration and compile the kernel by invoking <code>make -j8</code>. After the compilation, we are interested in two newly created files:</p>
+<ul>
+<li>vmlinux. This is the Linux Kernel in an statically linked executable file format with all debugging information.</li>
+<li>scripts/gdb/vmlinux-gdb.py. This is the GDB script for kernel debugging.</li>
+</ul>
+<p>Let&rsquo;s add the GDB script to the GDB init file so that the script gets loaded everytime we start GDB Debugger:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>echo</span> <span class=s2>&#34;add-auto-load-safe-path `pwd`/scripts/gdb/vmlinux-gdb.py&#34;</span> &gt;&gt; ~/.gdbinit
+</code></pre></div><h2 id=start-a-debugging-session>Start a Debugging Session</h2>
+<p>QEMU provides two important options for debugging purpose:</p>
+<ul>
+<li>The <code>-S</code> option prevents the CPU from starting. This gives time for debugger to connect and allows to start debugging from the very beginning.</li>
+<li>The <code>-s</code> option starts a GDB Server on port 1234. Later in GDB Debugger we can connect to it with <code>target remote :1234</code>.</li>
+</ul>
+<p>Now let&rsquo;s boot the kernel with these options:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ qemu-system-x86_64 <span class=se>\
+</span><span class=se></span>    -S <span class=se>\
+</span><span class=se></span>    -s <span class=se>\
+</span><span class=se></span>    -enable-kvm <span class=se>\
+</span><span class=se></span>    -kernel bzImage <span class=se>\
+</span><span class=se></span>    -smp <span class=nv>cores</span><span class=o>=</span>1,threads<span class=o>=</span><span class=m>2</span> <span class=se>\
+</span><span class=se></span>    -m <span class=m>1024</span> <span class=se>\
+</span><span class=se></span>    -append <span class=s2>&#34;console=ttyS0 nokaslr selinux=0 debug&#34;</span> <span class=se>\
+</span><span class=se></span>    -initrd initramfs.img <span class=se>\
+</span><span class=se></span>    -serial stdio <span class=se>\
+</span><span class=se></span>    -display none
+</code></pre></div><p>Note that the running of the process is feezed, because we have told QEMU to wait for debugger by using the <code>-S</code> option.</p>
+<p>In another terminal, start the GDB Debugger and connect it to QEMU:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ gdb vmlinux
+Type <span class=s2>&#34;apropos word&#34;</span> to search <span class=k>for</span> commands related to <span class=s2>&#34;word&#34;</span>...
+Reading symbols from vmlinux...
+<span class=o>(</span>gdb<span class=o>)</span> target remote :1234
+Remote debugging using :1234
+0x000000000000fff0 in exception_stacks <span class=o>()</span>
+</code></pre></div><p>Now we are able to set break points and trace the running of the kernel as if it is just a normal user application:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=o>(</span>gdb<span class=o>)</span> b start_kernel
+Note: breakpoints <span class=m>1</span> and <span class=m>2</span> also <span class=nb>set</span> at pc 0xffffffff829e0aa8.
+Breakpoint <span class=m>3</span> at 0xffffffff829e0aa8: file init/main.c, line 786.
+<span class=o>(</span>gdb<span class=o>)</span> c
+Continuing.
+
+Thread <span class=m>1</span> hit Breakpoint 1, start_kernel <span class=o>()</span> at init/main.c:786
+<span class=m>786</span>     <span class=o>{</span>
+...
+</code></pre></div><h2 id=references>References</h2>
+<ul>
+<li><a href=https://en.wikibooks.org/wiki/QEMU/Debugging_with_QEMU>Debugging with QEMU</a></li>
+</ul>
+<div class=blog-tags>
+<a href=https://yuankun.me/tags/linux/>linux</a>&nbsp;
+<a href=https://yuankun.me/tags/qemu/>qemu</a>&nbsp;
+<a href=https://yuankun.me/tags/gdb/>gdb</a>&nbsp;
+</div>
+<h4 class=see-also>See also</h4>
+<ul>
+<li><a href=/posts/dev-machine-setup/>My Dev Machine Setup</a></li>
+<li><a href=/posts/home-server-setup/>My Home Server Setup</a></li>
+<li><a href=/posts/running-raw-linux-kernel-in-qemu/>Running Raw Linux Kernel in QEMU</a></li>
+<li><a href=/posts/running-alpine-linux-in-qemu/>Running Alpine Linux in QEMU</a></li>
+</ul>
+</article>
+<ul class="pager blog-pager">
+<li class=previous>
+<a href=https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/ data-toggle=tooltip data-placement=top title="Running Raw Linux Kernel in QEMU">&larr; Previous Post</a>
+</li>
+<li class=next>
+<a href=https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/ data-toggle=tooltip data-placement=top title="A Terraform Module to List Google Cloud Service Agents">Next Post &rarr;</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<footer>
+<div class=container>
+<div class=row>
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<ul class="list-inline text-center footer-links">
+<li>
+<a href=https://github.com/yuankunzhang title=GitHub>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-github fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://linkedin.com/in/yuankun-zhang-b1415b116 title=LinkedIn>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href=https://stackoverflow.com/users/756651/yuankun title=StackOverflow>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+<li>
+<a href title=RSS>
+<span class="fa-stack fa-lg">
+<i class="fas fa-circle fa-stack-2x"></i>
+<i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+</span>
+</a>
+</li>
+</ul>
+<p class="credits copyright text-muted">
+Yuankun Zhang
+&nbsp;&bull;&nbsp;&copy;
+2022
+&nbsp;&bull;&nbsp;
+<a href=https://yuankun.me>Yuankun's Blog</a>
+</p>
+<p class="credits theme-by text-muted">
+<a href=https://gohugo.io>Hugo v0.91.2</a> powered &nbsp;&bull;&nbsp; Theme <a href=https://github.com/halogenica/beautifulhugo>Beautiful Hugo</a> adapted from <a href=https://deanattali.com/beautiful-jekyll/>Beautiful Jekyll</a>
+</p>
+</div>
+</div>
+</div>
+</footer><script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js integrity=sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js integrity=sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe crossorigin=anonymous></script>
+<script src=https://code.jquery.com/jquery-1.12.4.min.js integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin=anonymous></script>
+<script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js integrity=sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa crossorigin=anonymous></script>
+<script src=https://yuankun.me/js/main.js></script>
+<script src=https://yuankun.me/js/highlight.min.js></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script>$(document).ready(function(){$("pre.chroma").css("padding","0")})</script><script>renderMathInElement(document.body)</script><script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js integrity=sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy crossorigin=anonymous></script>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js integrity=sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q crossorigin=anonymous></script><script src=https://yuankun.me/js/load-photoswipe.js></script>
+</body>
+</html>
