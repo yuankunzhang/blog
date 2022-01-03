@@ -1,23 +1,24 @@
 +++
 title = "My Home Server Setup"
+date = 2021-06-21T20:50:45+08:00
 slug = "home-server-setup"
-[taxonomies]
 categories = ["linux"]
 tags = ["linux", "arch", "luks", "raid"]
+draft = false
 +++
 
-Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I've been planning to turn it into a home server. I want to use it primarily as a Samba Server. It also comes handy to run some self-hosted services like NextCloud.
+Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I've been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.
 
-In this article I'll talk about the setup of this home server.
+In this article I'll talk about my setup of this home server.
 
-<!-- more -->
+<!--more-->
 
 ## Operating System
 
-I've been using Arch Linux as my desktop OS for a long time, and I'm loving it. Though it's rare to hear people using Arch Linux as server OS, I'd like to give it a try. I will write a review after maybe six months or one year of running it. There are some features that I love the most about Arch Linux:
+I've been using Arch Linux as my desktop OS for a long time, and I'm loving it ([Why you should also try it](https://bbs.archlinux.org/viewtopic.php?id=115942)). Though it's rare to hear people using Arch Linux as server OS, I'd like to give it a try. I will write a review after maybe six months or one year of running it. There are some features that I love the most about Arch Linux:
 
 - **Minimal system out of the box**. Arch Linux by default has almost nothing installed. You choose what to install.
-- **Rolling release**. This is what other distros like Debian or CentOS are missing. Because of the rolling release model, my server will be always on the latest everything. Well, it may be a concern that this rolling release model is a bit too aggressive and may introduce breaking changes. As I'm using it only for my home server, the risk is acceptable.
+- **Rolling release**. This is what other distros like Debian or CentOS are missing. Because of the rolling release model, my server will be always on the latest everything. Well, it may be a concern that this rolling release model is a bit too aggressive and may introduce unstable features. As I'm using it only for my home server, the risk is acceptable.
 - **Excellent Wiki**. There are detailed guides on almost everything you want to do with your system. Kudos to the community!
 
 ## Hardware
@@ -33,14 +34,14 @@ Here are my hardware specifications.
 
 ## Goals
 
-These are the goals I want to achieve with this server build.
+There are some goals that I want to achieve with this server build.
 
-- **No proprietary software (except the boot firmware)**. I'll give [Libreboot](https://libreboot.org/) a try later some time.
-- **Full disk encryption (except the boot partition)**.
+- **No proprietary software**. Except the boot firmware for now. I'll give [Libreboot](https://libreboot.org/) a try later some time.
+- **Full disk encryption**. Except the boot partition.
 - **Disk decryption via a remove SSH session**. I don't want to plug in a keyboard and a screen every time I need to restart the server.
 - **RAID 1 on the two HDDs**. It will be used as the Samba storage partition.
 
-I'm not sure whether or not it's worth to setup the SSD as a cache for the RAID. For now I'm excluding it from my goals. It will be an interesting investigation for my future time.
+I'm not sure whether or not it's worth to setup the SSD as a cache for the RAID. For now I'm excluding it from my goals. It will be an interesting investigation for future time.
 
 ## Disk Partitioning and Encryption
 
@@ -64,7 +65,7 @@ $ cryptsetup luksFormat /dev/nvme0n1p2
 $ cryptsetup open /dev/nvme0n1p2 root
 ```
 
-The two HDDs are implemented as software RAID (level 1). I'm using [mdadm](https://wiki.archlinux.org/title/RAID#Installation) for this purpose.
+The two HDDs are implemented as software RAID (level 1). I'm using [mdadm](https://wiki.archlinux.org/title/RAID#Installation) to manage it.
 
 ```shell
 $ mdadm --create --verbose --level=1 --metadata=1.2 --raid-devices=2 /dev/md0 /dev/sda1 /dev/sdb1
@@ -99,7 +100,7 @@ nvme0n1     259:0    0 931.5G  0 disk
   └─root    254:0    0 930.5G  0 crypt /
 ```
 
-mdadm needs the `mdadm_udev` hook, we should add it to the `HOOKS` section in `/etc/mkinitcpio.conf`:
+Mdadm needs the `mdadm_udev` hook, so we should add it to the `HOOKS` section in `/etc/mkinitcpio.conf`:
 
 ## Arch Linux Installation
 
@@ -137,7 +138,7 @@ First, install systemd-tool and its dependencies.
 $ pacman -S mkinitcpio-systemd-tool busybox cryptsetup openssh tinyssh tinyssh-convert mc
 ```
 
-It requires the `systemd-tool` hook. The final `HOOKS` section in `/etc/mkinitcpio.conf` looks like below.
+It requires the `systemd-tool` hook. Add this hook in `/etc/mkinitcpio.conf`. The final `HOOKS` section in `/etc/mkinitcpio.conf` looks like below.
 
 ```txt
 HOOKS=(base udev autodetect modconf block mdadm_udev filesystems keyboard fsck systemd systemd-tool)
@@ -157,7 +158,7 @@ $ echo "UUID=$(blkid -s UUID -o value /dev/mapper/root) /   ext4    rw,relatime 
 $ echo "/dev/mapper/root    /sysroot    auto    x-systemd.device-timeout=9999h  0 1" > /etc/mkinitcpio-systemd-tool/config/fstab
 ```
 
-Then, enable required services and build initramfs.
+Then, enable the required services and build initramfs.
 
 ```shell
 $ systemctl enable initrd-cryptsetup.path
@@ -176,7 +177,7 @@ After rebooting, the server now has a fancy remote shell running before the root
 - Tinyssh only recognizes Ed25519 SSH key. So I need to generate an Ed25519 key pair on my local machine and paste the public key to `/root/.ssh/authorized_keys`.
 - In this early stage, we can only connect as `root` user, because other users are not available yet.
 
-The root partition will automatically get decrypted and mounted after the decryption key is inputed into the prompt.
+The root partition will automatically get decrypted and mounted after the decryption key is typed into the prompt.
 
 I haven't talked about the decryption and mounting of the RAID device. It is actually less a problem. We can simply create a key file under `/etc/cryptsetup-keys.d/` (let's call it `nas.key`) and use this key file to decrypt the RAID device. Modify `/etc/crypttab` and `/etc/fstab` as described below and we are all set.
 
