@@ -9,6 +9,9 @@ buildDrafts = false
 buildFuture = false
 buildExpired = false
 
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
 [minify]
   disableXML = true
   minifyOutput = true
@@ -47,6 +50,18 @@ buildExpired = false
   showtoc = false
   tocopen = false
 
+[params.homeInfoParams]
+  title = "Do or do not, there is no try"
+  content = "Always do what you're afraid to do."
+
+[[params.socialIcons]]
+  name = "stackoverflow"
+  url = "https://stackoverflow.com/users/756651"
+
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/yuankunzhang"
+
 [params.fuseOpts]
   isCaseSensitive = false
   shouldSort = true
@@ -57,19 +72,31 @@ buildExpired = false
   keys = ["title", "permalink", "summary", "content"]
 
 [[menu.main]]
+  name = "Search"
+  identifier = "search"
+  url = "/search/"
+  weight = 10
+
+[[menu.main]]
+  name = "Archives"
+  identifier = "archives"
+  url = "/archives/"
+  weight = 20
+
+[[menu.main]]
   name = "Categories"
   identifier = "categories"
   url = "/categories/"
-  weight = 10
+  weight = 30
 
 [[menu.main]]
   name = "Tags"
   identifier = "tags"
   url = "/tags/"
-  weight = 20
+  weight = 40
 
 [[menu.main]]
   name = "About"
   identifier = "about"
   url = "/about/"
-  weight = 30
+  weight = 50
