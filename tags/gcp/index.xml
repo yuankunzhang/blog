@@ -1,6 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>gcp on Yuankun's Blog</title><link>https://yuankun.me/tags/gcp/</link><description>Recent content in gcp on Yuankun's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/gcp/index.xml" rel="self" type="application/rss+xml"/><item><title>A Terraform Module to List Google Cloud Service Agents</title><link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link><pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate><guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid><description>&lt;p>There are &lt;a href="https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts">two types of service accounts&lt;/a> in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.&lt;/p>
-&lt;p>A service agent has the following pattern:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can spot the service agents from the IAM section of Google Cloud Console.&lt;/p>
-&lt;p>&lt;img src="https://yuankun.me/img/20200402-0012.png" alt="Service Agents">&lt;/p>
-&lt;p>When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&amp;rsquo;ll show you a code snippet coming from one of our Terraform files (I&amp;rsquo;m using &lt;code>xxxxx&lt;/code> instead of the real project number).&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>gcp on Yuankun&#39;s Blog</title>
+    <link>https://yuankun.me/tags/gcp/</link>
+    <description>Recent content in gcp on Yuankun&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 01 Apr 2020 23:47:03 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/gcp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Terraform Module to List Google Cloud Service Agents</title>
+      <link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
+      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
+      <description>&lt;p&gt;There are &lt;a href=&#34;https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts&#34;&gt;two types of service accounts&lt;/a&gt; in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.&lt;/p&gt;
+&lt;p&gt;A service agent has the following pattern:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can spot the service agents from the IAM section of Google Cloud Console.&lt;/p&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://yuankun.me/img/20200402-0012.png&#34; alt=&#34;Service Agents&#34;  /&gt;
+&lt;/p&gt;
+&lt;p&gt;When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&amp;rsquo;ll show you a code snippet coming from one of our Terraform files (I&amp;rsquo;m using &lt;code&gt;xxxxx&lt;/code&gt; instead of the real project number).&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,2 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>luks on Yuankun's Blog</title><link>https://yuankun.me/tags/luks/</link><description>Recent content in luks on Yuankun's Blog</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 21 Jun 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/luks/index.xml" rel="self" type="application/rss+xml"/><item><title>My Home Server Setup</title><link>https://yuankun.me/posts/home-server-setup/</link><pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate><guid>https://yuankun.me/posts/home-server-setup/</guid><description>&lt;p>Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&amp;rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.&lt;/p>
-&lt;p>In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>luks on Yuankun&#39;s Blog</title>
+    <link>https://yuankun.me/tags/luks/</link>
+    <description>Recent content in luks on Yuankun&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 21 Jun 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/luks/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My Home Server Setup</title>
+      <link>https://yuankun.me/posts/home-server-setup/</link>
+      <pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate>
+      
+      <guid>https://yuankun.me/posts/home-server-setup/</guid>
+      <description>&lt;p&gt;Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&amp;rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.&lt;/p&gt;
+&lt;p&gt;In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
