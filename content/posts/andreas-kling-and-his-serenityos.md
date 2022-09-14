@@ -2,6 +2,7 @@
 title = "传奇程序员 Andreas Kling 和他的 SerenityOS"
 author = ["Yuankun Zhang"]
 date = 2022-09-14T23:18:00+08:00
+categories = ["misc"]
 draft = false
 +++
 
