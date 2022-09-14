@@ -2,13 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://yuankun.me/posts/</loc>
+    <lastmod>2022-09-14T23:18:00+08:00</lastmod>
+  </url><url>
+    <loc>https://yuankun.me/</loc>
+    <lastmod>2022-09-14T23:18:00+08:00</lastmod>
+  </url><url>
+    <loc>https://yuankun.me/posts/andreas-kling-and-his-serenityos/</loc>
+    <lastmod>2022-09-14T23:18:00+08:00</lastmod>
+  </url><url>
     <loc>https://yuankun.me/page/about/</loc>
     <lastmod>2022-01-03T20:50:45+08:00</lastmod>
   </url><url>
     <loc>https://yuankun.me/page/</loc>
-    <lastmod>2022-01-03T20:50:45+08:00</lastmod>
-  </url><url>
-    <loc>https://yuankun.me/</loc>
     <lastmod>2022-01-03T20:50:45+08:00</lastmod>
   </url><url>
     <loc>https://yuankun.me/tags/arch/</loc>
@@ -27,9 +33,6 @@
     <lastmod>2021-07-07T20:50:45+08:00</lastmod>
   </url><url>
     <loc>https://yuankun.me/posts/dev-machine-setup/</loc>
-    <lastmod>2021-07-07T20:50:45+08:00</lastmod>
-  </url><url>
-    <loc>https://yuankun.me/posts/</loc>
     <lastmod>2021-07-07T20:50:45+08:00</lastmod>
   </url><url>
     <loc>https://yuankun.me/tags/</loc>
