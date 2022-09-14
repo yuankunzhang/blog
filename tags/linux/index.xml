@@ -7,16 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 07 Jul 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My Dev Machine Setup</title>
+      <title>Setup a Development Machine</title>
       <link>https://yuankun.me/posts/dev-machine-setup/</link>
       <pubDate>Wed, 07 Jul 2021 20:50:45 +0800</pubDate>
       
       <guid>https://yuankun.me/posts/dev-machine-setup/</guid>
-      <description>&lt;p&gt;A few days ago, I had a &lt;a href=&#34;https://yuankun.me/posts/home-server-setup&#34;&gt;home server build&lt;/a&gt;. Today I want to have a clean OS reinstallation on my development machine. The primary reason is that the root partition is almost full (due to short-sightness when I first set up this machine). Apart from that, there are several other issues that I want to tackle:&lt;/p&gt;
+      <description>&lt;p&gt;A few days ago, I did a &lt;a href=&#34;https://yuankun.me/posts/home-server-setup&#34;&gt;home server build&lt;/a&gt;. Today I want to have a clean OS reinstallation on my development machine, because of a few things:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;I got a lot of &lt;code&gt;__common_interrupt: 1.55 No irq handler for vector&lt;/code&gt; errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with different kernel parameters, but none helped. Seems like the only solution is to upgrade the BIOS firmware.&lt;/li&gt;
-&lt;li&gt;I cannot use my bluetooth keyboard to input decryption key to decrypt the root partition, because the bluetooth service is locked in the root partition and it&amp;rsquo;s a chicken-egg problem. This is quite disturbing, everytime I restarted the machine, I had to wire in my USB keyboard just to input the decryption key.&lt;/li&gt;
-&lt;/ul&gt;</description>
+&lt;li&gt;The root partition on this machine is almost full (thank you, my two years ago self).&lt;/li&gt;
+&lt;li&gt;I got a lot of &lt;code&gt;__common_interrupt: 1.55 No irq handler for vector&lt;/code&gt; errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with several different combinations of kernel parameters mentioned in the thread, but none helped. It seems like the only working solution is to upgrade the BIOS firmware.&lt;/li&gt;
+&lt;li&gt;I cannot decrypt the root partition without using my bluetooth keyboard, in the meantime I cannot use my bluetooth keyboard before the root partition is decrypted and mounted (because the bluetooth service sits in the root partition). This is a chicken-egg problem. My current hack around is to use a wired USB keyboard to decrypt the root parition. But I desperately want to eliminate the use of this USB keyboard.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://yuankun.me/img/keyboard-not-found-press-any-key.png&#34; alt=&#34;Keyboard not found, press any key to continue&amp;amp;hellip;&#34;  /&gt;
+&lt;/p&gt;</description>
     </item>
     
     <item>
