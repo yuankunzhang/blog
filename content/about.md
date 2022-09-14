@@ -5,7 +5,7 @@ draft: false
 ---
 
 ```txt
-YUANKUN ZHANG                 Linux User's Manual                 YUANKUN ZHANG(8)
+YUANKUN ZHANG (8)             Linux User's Manual                YUANKUN ZHANG (8)
 
 NAME
       Yuankun Zhang - a programmer
