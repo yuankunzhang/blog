@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Mon, 21 Jun 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/raid/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My Home Server Setup</title>
+      <title>Setup a Home Server</title>
       <link>https://yuankun.me/posts/home-server-setup/</link>
       <pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate>
       
       <guid>https://yuankun.me/posts/home-server-setup/</guid>
-      <description>&lt;p&gt;Recently I got some retired computer hardware. Better than putting it in the corner and let it absorb dust, I&amp;rsquo;ve been planning to turn it into a home server. My main goal is to use it primarily as a Samba Server, but I may go futher to run other self-hosted services like NextCloud.&lt;/p&gt;
+      <description>&lt;p&gt;Recently I got a retired computer. Better than letting it sit in the corner queitly and become a dust collector, I&amp;rsquo;ve been planning to turn it into a home server. I mainly need a Samba Server, but I may go further to run other self-hosted services like NextCloud.&lt;/p&gt;
 &lt;p&gt;In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p&gt;</description>
     </item>
     
