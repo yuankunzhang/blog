@@ -1,36 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>arch on Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/tags/arch/</link>
-    <description>Recent content in arch on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 07 Jul 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/arch/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Setup a Development Machine</title>
-      <link>https://yuankun.me/posts/dev-machine-setup/</link>
-      <pubDate>Wed, 07 Jul 2021 20:50:45 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/dev-machine-setup/</guid>
-      <description>&lt;p&gt;A few days ago, I did a &lt;a href=&#34;https://yuankun.me/posts/home-server-setup&#34;&gt;home server build&lt;/a&gt;. Today I want to have a clean OS reinstallation on my development machine, because of a few things:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The root partition on this machine is almost full (thank you, my two years ago self).&lt;/li&gt;
-&lt;li&gt;I got a lot of &lt;code&gt;__common_interrupt: 1.55 No irq handler for vector&lt;/code&gt; errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with several different combinations of kernel parameters mentioned in the thread, but none helped. It seems like the only working solution is to upgrade the BIOS firmware.&lt;/li&gt;
-&lt;li&gt;I cannot decrypt the root partition without using my bluetooth keyboard, in the meantime I cannot use my bluetooth keyboard before the root partition is decrypted and mounted (because the bluetooth service sits in the root partition). This is a chicken-egg problem. My current hack around is to use a wired USB keyboard to decrypt the root parition. But I desperately want to eliminate the use of this USB keyboard.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://yuankun.me/img/keyboard-not-found-press-any-key.png&#34; alt=&#34;Keyboard not found, press any key to continue&amp;amp;hellip;&#34;  /&gt;
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Setup a Home Server</title>
-      <link>https://yuankun.me/posts/home-server-setup/</link>
-      <pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/home-server-setup/</guid>
-      <description>&lt;p&gt;Recently I got a retired computer. Better than letting it sit in the corner queitly and become a dust collector, I&amp;rsquo;ve been planning to turn it into a home server. I mainly need a Samba Server, but I may go further to run other self-hosted services like NextCloud.&lt;/p&gt;
-&lt;p&gt;In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>arch on yuankun@net $</title><link>https://yuankun.me/tags/arch/</link><description>Recent content in arch on yuankun@net $</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 07 Jul 2021 20:50:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/arch/index.xml" rel="self" type="application/rss+xml"/><item><title>Setup a Development Machine</title><link>https://yuankun.me/posts/dev-machine-setup/</link><pubDate>Wed, 07 Jul 2021 20:50:45 +0800</pubDate><guid>https://yuankun.me/posts/dev-machine-setup/</guid><description>&lt;p>A few days ago, I did a &lt;a href="https://yuankun.me/posts/home-server-setup" >home server build&lt;/a>. Today I want to have a clean OS reinstallation on my development machine, because of a few things:&lt;/p>
+&lt;ul>
+&lt;li>The root partition on this machine is almost full (thank you, my two years ago self).&lt;/li>
+&lt;li>I got a lot of &lt;code>__common_interrupt: 1.55 No irq handler for vector&lt;/code> errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with several different combinations of kernel parameters mentioned in the thread, but none helped. It seems like the only working solution is to upgrade the BIOS firmware.&lt;/li>
+&lt;li>I cannot decrypt the root partition without using my bluetooth keyboard, in the meantime I cannot use my bluetooth keyboard before the root partition is decrypted and mounted (because the bluetooth service sits in the root partition). This is a chicken-egg problem. My current hack around is to use a wired USB keyboard to decrypt the root parition. But I desperately want to eliminate the use of this USB keyboard.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://yuankun.me/img/keyboard-not-found-press-any-key.png" alt="Keyboard not found, press any key to continue&amp;amp;hellip;">&lt;/p></description></item><item><title>Setup a Home Server</title><link>https://yuankun.me/posts/home-server-setup/</link><pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate><guid>https://yuankun.me/posts/home-server-setup/</guid><description>&lt;p>Recently I got a retired computer. Better than letting it sit in the corner queitly and become a dust collector, I&amp;rsquo;ve been planning to turn it into a home server. I mainly need a Samba Server, but I may go further to run other self-hosted services like NextCloud.&lt;/p>
+&lt;p>In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p></description></item></channel></rss>

@@ -1,19 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>github on Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/tags/github/</link>
-    <description>Recent content in github on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 12 Mar 2020 22:14:58 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/github/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Publishing Subdirectory to Github Pages</title>
-      <link>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</link>
-      <pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the &lt;code&gt;public/&lt;/code&gt; subdirectory stores the generated static pages:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;├── archetypes/
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github on yuankun@net $</title><link>https://yuankun.me/tags/github/</link><description>Recent content in github on yuankun@net $</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 12 Mar 2020 22:14:58 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Publishing Subdirectory to Github Pages</title><link>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</link><pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate><guid>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</guid><description>&lt;p>I&amp;rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the &lt;code>public/&lt;/code> subdirectory stores the generated static pages:&lt;/p>
+&lt;pre tabindex="0">&lt;code>├── archetypes/
 ├── config.toml
 ├── content/
 ├── data/
@@ -22,8 +8,4 @@
 ├── resources/
 ├── static/
 └── themes/
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How do I publish the &lt;code&gt;public/&lt;/code&gt; subdirectory, instead of the root directory, to Github Pages?&lt;/p&gt;</description>
-    </item>
-    
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;p>How do I publish the &lt;code>public/&lt;/code> subdirectory, instead of the root directory, to Github Pages?&lt;/p></description></item></channel></rss>

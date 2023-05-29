@@ -1,18 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Yuankun&#39;s Blog</title>
-    <link>https://yuankun.me/</link>
-    <description>Recent content on Yuankun&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 14 Sep 2022 23:18:00 +0800</lastBuildDate><atom:link href="https://yuankun.me/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>传奇程序员 Andreas Kling 和他的 SerenityOS</title>
-      <link>https://yuankun.me/posts/andreas-kling-and-his-serenityos/</link>
-      <pubDate>Wed, 14 Sep 2022 23:18:00 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/andreas-kling-and-his-serenityos/</guid>
-      <description>我们今天故事的主角，是一个叫做Andreas Kling的瑞典程序员。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>yuankun@net $</title><link>https://yuankun.me/</link><description>Recent content on yuankun@net $</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 14 Sep 2022 23:18:00 +0800</lastBuildDate><atom:link href="https://yuankun.me/index.xml" rel="self" type="application/rss+xml"/><item><title>传奇程序员 Andreas Kling 和他的 SerenityOS</title><link>https://yuankun.me/posts/andreas-kling-and-his-serenityos/</link><pubDate>Wed, 14 Sep 2022 23:18:00 +0800</pubDate><guid>https://yuankun.me/posts/andreas-kling-and-his-serenityos/</guid><description>我们今天故事的主角，是一个叫做Andreas Kling的瑞典程序员。
 这个月的 9 月 12 日，Andreas 在他的个人网站上刊出了一篇文章来介绍他的Ladybird浏览器项目。浏览器大概是这个星球上最为庞大的软件项目，从零开始写出一个即便只是玩票性质的浏览器也是一项惊人困难的任务。如果你对它的难度没有直观认识的话，不妨猜一猜 Firefox 浏览器总共有多少行代码？答案是2100万行！数量庞杂（并且仍在爆炸式增加）的各种web标准使得编写浏览器几乎成了只有互联网寡头才能组织起人力和资源来完成的事情。所以，Andreas 的这个几乎以一己之力做出来的浏览器完全值得让人拍手称奇。
 Figure 1: Ladybird 浏览器以满分的成绩通过了Acid3测试
 事实上，在 Ladybird 项目之前，Andreas 已经完成了多项壮举，比如一个叫做SerenityOS的操作系统和一门叫做Jakt的系统级编程语言。用他自己的话说，他的目标是“从头编写一个完整的操作系统”。这些项目，不论单独拎出来哪一个，都显得过于庞大。如果这些项目的代码不是实实在在摆在大家的面前的话，我一定觉得这个人是痴人说梦。
@@ -21,94 +7,20 @@ Figure 1: Ladybird 浏览器以满分的成绩通过了Acid3测试
 Figure 2: 这是一款吸收了 90 年代美学理念的类 Unix 系统
 这个由 Andreas 在 2018 年单枪匹马创建的项目，到现在已经蔚为大观。不同于浏览器，从头开始写出一个简单的操作系统并非难事，难的是聚拢各路牛人，形成真正有活力的社区。截至今日，该项目已经斩获了两万一千多颗 Github 星标，共有超过 700 位开发者向该项目贡献了代码。在我看来，Andreas 的这个操作系统谈不上有什么实际的用途，最多只是一个稍具规模的玩具而已。不过，不少重量级的软件都是“玩”出来的，难道不是吗？比如 Linux，这个在今天已经无处不在的操作系统（你甚至在火星上也能发现它的存在），Linux Torvalds 最初发布它的时候可没有想到有一天它竟会大放异采。
 Figure 3: 图片来源：NASA
-时至今日，Andreas 依然耕耘不辍，几乎全年无休。我们就以他的 Github 状态墙的截图结束本文吧，希望他能在写代码的道路上继续快乐地走下去。</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://yuankun.me/page/about/</link>
-      <pubDate>Mon, 03 Jan 2022 20:50:45 +0800</pubDate>
-      
-      <guid>https://yuankun.me/page/about/</guid>
-      <description>A coder.</description>
-    </item>
-    
-    <item>
-      <title>Setup a Development Machine</title>
-      <link>https://yuankun.me/posts/dev-machine-setup/</link>
-      <pubDate>Wed, 07 Jul 2021 20:50:45 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/dev-machine-setup/</guid>
-      <description>&lt;p&gt;A few days ago, I did a &lt;a href=&#34;https://yuankun.me/posts/home-server-setup&#34;&gt;home server build&lt;/a&gt;. Today I want to have a clean OS reinstallation on my development machine, because of a few things:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The root partition on this machine is almost full (thank you, my two years ago self).&lt;/li&gt;
-&lt;li&gt;I got a lot of &lt;code&gt;__common_interrupt: 1.55 No irq handler for vector&lt;/code&gt; errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with several different combinations of kernel parameters mentioned in the thread, but none helped. It seems like the only working solution is to upgrade the BIOS firmware.&lt;/li&gt;
-&lt;li&gt;I cannot decrypt the root partition without using my bluetooth keyboard, in the meantime I cannot use my bluetooth keyboard before the root partition is decrypted and mounted (because the bluetooth service sits in the root partition). This is a chicken-egg problem. My current hack around is to use a wired USB keyboard to decrypt the root parition. But I desperately want to eliminate the use of this USB keyboard.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://yuankun.me/img/keyboard-not-found-press-any-key.png&#34; alt=&#34;Keyboard not found, press any key to continue&amp;amp;hellip;&#34;  /&gt;
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Setup a Home Server</title>
-      <link>https://yuankun.me/posts/home-server-setup/</link>
-      <pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/home-server-setup/</guid>
-      <description>&lt;p&gt;Recently I got a retired computer. Better than letting it sit in the corner queitly and become a dust collector, I&amp;rsquo;ve been planning to turn it into a home server. I mainly need a Samba Server, but I may go further to run other self-hosted services like NextCloud.&lt;/p&gt;
-&lt;p&gt;In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>A Terraform Module to List Google Cloud Service Agents</title>
-      <link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link>
-      <pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid>
-      <description>&lt;p&gt;There are &lt;a href=&#34;https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts&#34;&gt;two types of service accounts&lt;/a&gt; in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.&lt;/p&gt;
-&lt;p&gt;A service agent has the following pattern:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can spot the service agents from the IAM section of Google Cloud Console.&lt;/p&gt;
-&lt;p&gt;&lt;img loading=&#34;lazy&#34; src=&#34;https://yuankun.me/img/20200402-0012.png&#34; alt=&#34;Service Agents&#34;  /&gt;
-&lt;/p&gt;
-&lt;p&gt;When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&amp;rsquo;ll show you a code snippet coming from one of our Terraform files (I&amp;rsquo;m using &lt;code&gt;xxxxx&lt;/code&gt; instead of the real project number).&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Debug Linux Kernel With QEMU and GDB</title>
-      <link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link>
-      <pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid>
-      <description>&lt;p&gt;In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Running Raw Linux Kernel in QEMU</title>
-      <link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link>
-      <pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid>
-      <description>&lt;p&gt;In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Running Alpine Linux in QEMU</title>
-      <link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link>
-      <pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid>
-      <description>&lt;p&gt;How to run a Linux operating system in QEMU.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Publishing Subdirectory to Github Pages</title>
-      <link>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</link>
-      <pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate>
-      
-      <guid>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the &lt;code&gt;public/&lt;/code&gt; subdirectory stores the generated static pages:&lt;/p&gt;
-&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;├── archetypes/
+时至今日，Andreas 依然耕耘不辍，几乎全年无休。我们就以他的 Github 状态墙的截图结束本文吧，希望他能在写代码的道路上继续快乐地走下去。</description></item><item><title>About</title><link>https://yuankun.me/page/about/</link><pubDate>Mon, 03 Jan 2022 20:50:45 +0800</pubDate><guid>https://yuankun.me/page/about/</guid><description>A coder.</description></item><item><title>Setup a Development Machine</title><link>https://yuankun.me/posts/dev-machine-setup/</link><pubDate>Wed, 07 Jul 2021 20:50:45 +0800</pubDate><guid>https://yuankun.me/posts/dev-machine-setup/</guid><description>&lt;p>A few days ago, I did a &lt;a href="https://yuankun.me/posts/home-server-setup" >home server build&lt;/a>. Today I want to have a clean OS reinstallation on my development machine, because of a few things:&lt;/p>
+&lt;ul>
+&lt;li>The root partition on this machine is almost full (thank you, my two years ago self).&lt;/li>
+&lt;li>I got a lot of &lt;code>__common_interrupt: 1.55 No irq handler for vector&lt;/code> errors during the system bootup. There&amp;rsquo;s a thread in the Arch Forum discussing this issue. I tried booting up the system with several different combinations of kernel parameters mentioned in the thread, but none helped. It seems like the only working solution is to upgrade the BIOS firmware.&lt;/li>
+&lt;li>I cannot decrypt the root partition without using my bluetooth keyboard, in the meantime I cannot use my bluetooth keyboard before the root partition is decrypted and mounted (because the bluetooth service sits in the root partition). This is a chicken-egg problem. My current hack around is to use a wired USB keyboard to decrypt the root parition. But I desperately want to eliminate the use of this USB keyboard.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://yuankun.me/img/keyboard-not-found-press-any-key.png" alt="Keyboard not found, press any key to continue&amp;amp;hellip;">&lt;/p></description></item><item><title>Setup a Home Server</title><link>https://yuankun.me/posts/home-server-setup/</link><pubDate>Mon, 21 Jun 2021 20:50:45 +0800</pubDate><guid>https://yuankun.me/posts/home-server-setup/</guid><description>&lt;p>Recently I got a retired computer. Better than letting it sit in the corner queitly and become a dust collector, I&amp;rsquo;ve been planning to turn it into a home server. I mainly need a Samba Server, but I may go further to run other self-hosted services like NextCloud.&lt;/p>
+&lt;p>In this article I&amp;rsquo;ll talk about my setup of this home server.&lt;/p></description></item><item><title>A Terraform Module to List Google Cloud Service Agents</title><link>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</link><pubDate>Wed, 01 Apr 2020 23:47:03 +0800</pubDate><guid>https://yuankun.me/posts/a-terraform-module-to-list-google-cloud-service-agents/</guid><description>&lt;p>There are &lt;a href="https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts" class="external-link" target="_blank" rel="noopener">two types of service accounts&lt;/a> in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.&lt;/p>
+&lt;p>A service agent has the following pattern:&lt;/p>
+&lt;pre tabindex="0">&lt;code>service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
+&lt;/code>&lt;/pre>&lt;p>You can spot the service agents from the IAM section of Google Cloud Console.&lt;/p>
+&lt;p>&lt;img src="https://yuankun.me/img/20200402-0012.png" alt="Service Agents">&lt;/p>
+&lt;p>When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I&amp;rsquo;ll show you a code snippet coming from one of our Terraform files (I&amp;rsquo;m using &lt;code>xxxxx&lt;/code> instead of the real project number).&lt;/p></description></item><item><title>Debug Linux Kernel With QEMU and GDB</title><link>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</link><pubDate>Fri, 20 Mar 2020 09:31:33 +0800</pubDate><guid>https://yuankun.me/posts/debug-linux-kernel-with-qemu-and-gdb/</guid><description>&lt;p>In last post we see how to run a raw Linux kernel in QEMU. QEMU offers another fancy feature: it can start a GDB Server and external GDB Debugger to connect. With this we can build a comfortable environment to debug system kernels and firmware. Let&amp;rsquo;s see how to leverage this feature to debug the Linux kernel.&lt;/p></description></item><item><title>Running Raw Linux Kernel in QEMU</title><link>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</link><pubDate>Mon, 16 Mar 2020 22:50:52 +0800</pubDate><guid>https://yuankun.me/posts/running-raw-linux-kernel-in-qemu/</guid><description>&lt;p>In last post we see how to run a packed Linux distribution in QEMU. This time let&amp;rsquo;s check out how to run a raw Linux kernel in QEMU.&lt;/p></description></item><item><title>Running Alpine Linux in QEMU</title><link>https://yuankun.me/posts/running-alpine-linux-in-qemu/</link><pubDate>Sat, 14 Mar 2020 09:41:41 +0800</pubDate><guid>https://yuankun.me/posts/running-alpine-linux-in-qemu/</guid><description>&lt;p>How to run a Linux operating system in QEMU.&lt;/p></description></item><item><title>Publishing Subdirectory to Github Pages</title><link>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</link><pubDate>Thu, 12 Mar 2020 22:14:58 +0800</pubDate><guid>https://yuankun.me/posts/publishing-subdirectory-to-github-pages/</guid><description>&lt;p>I&amp;rsquo;m using Hugo + Github Pages as my personal blog platform. A Hugo site yields the following directory structure, where the &lt;code>public/&lt;/code> subdirectory stores the generated static pages:&lt;/p>
+&lt;pre tabindex="0">&lt;code>├── archetypes/
 ├── config.toml
 ├── content/
 ├── data/
@@ -117,19 +29,4 @@ Figure 3: 图片来源：NASA
 ├── resources/
 ├── static/
 └── themes/
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;How do I publish the &lt;code&gt;public/&lt;/code&gt; subdirectory, instead of the root directory, to Github Pages?&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Who Am I</title>
-      <link>https://yuankun.me/about/</link>
-      <pubDate>Mon, 09 Mar 2020 14:29:36 +0800</pubDate>
-      
-      <guid>https://yuankun.me/about/</guid>
-      <description>YUANKUN ZHANG (8) Linux User&amp;#39;s Manual YUANKUN ZHANG (8) NAME Yuankun Zhang - a programmer SYNOPSIS yuankun [--devops] [--opensource] [--linux-user] [--father] SUMMARY Hi there! I&amp;#39;m a passionate programmer, and I code for fun. I am familiar with DevOps technologies. I use Arch Linux. In my spare time, I like running and playing badminton. OPTIONS --devops I have experience in the DevOps practices and am familar with the tools and approaches used in this space.</description>
-    </item>
-    
-    
-    
-  </channel>
-</rss>
+&lt;/code>&lt;/pre>&lt;p>How do I publish the &lt;code>public/&lt;/code> subdirectory, instead of the root directory, to Github Pages?&lt;/p></description></item><item><title>yuankun(7) - Linux manual page</title><link>https://yuankun.me/about/</link><pubDate>Mon, 09 Mar 2020 14:29:36 +0800</pubDate><guid>https://yuankun.me/about/</guid><description>YUANKUN(7) Linux Programmer's Manual YUANKUN(7) NAME yuankun - a code hunter SYNOPSIS yuankun --father yuankun --coder yuankun --linux yuankun --devops yuankun --opensource DESCRIPTION Greetings, digital explorer! Standing in front of you is a coding connoisseur who lives and breathes the binary. I'm too busy steering my CPU now, find me in the gaps between the CPU instructions! OPTIONS --father In 2021, my role in my family tree evolved from being a mere leaf to a vital internal node.</description></item><item><title>Archive</title><link>https://yuankun.me/archives/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://yuankun.me/archives/</guid><description>archives</description></item><item><title>Search</title><link>https://yuankun.me/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://yuankun.me/search/</guid><description>search</description></item></channel></rss>
