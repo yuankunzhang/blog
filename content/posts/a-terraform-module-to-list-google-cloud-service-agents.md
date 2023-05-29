@@ -9,19 +9,19 @@ tags:
   - terraform
 ---
 
-There are [two types of service accounts](https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts) in Google Cloud: user-managed service accounts, which are used by user applications to talk to Google Cloud; and Google-managed services accounts, which are used by Google Cloud internally. Among the second category, there is a special subtype of service accounts called Google Cloud Service Agents. Service Agents are used by Google Cloud services to run internal processes so that user requested operations can be fulfilled.
+Google Cloud Platform presents [two distinct types of service accounts](https://cloud.google.com/iam/docs/service-accounts#types_of_service_accounts): user-managed service accounts and Google-managed service accounts. The former is typically employed by user applications as an interface with Google Cloud, whereas the latter is utilized internally by Google Cloud. Within the realm of Google-managed service accounts, a specialized subset exists: Google Cloud Service Agents. These service agents are used by Google Cloud services to operate internal processes necessary to fulfill user-requested operations.
 
-A service agent has the following pattern:
+A service agent adhers to the following template:
 
 ```
 service-PROJECT_NUMBER@SERVICE_NAME.iam.gserviceaccount.com
 ```
 
-You can spot the service agents from the IAM section of Google Cloud Console.
+These service agents are easily identifiable within the IAM section of the Google Cloud Console.
 
 ![Service Agents](/img/20200402-0012.png)
 
-When managing IAM binding policies via Terraform, these service agents often generate noises. As an example, I'll show you a code snippet coming from one of our Terraform files (I'm using `xxxxx` instead of the real project number).
+During the management of IAM binding policies via Terraform, these service agents can often become obtrusive. For illustration, consider the following code snippet from one of our Terraform files (where `xxxxx` substitutes the actual project number).
 
 <!--more-->
 
@@ -47,9 +47,9 @@ resource "google_project_iam_binding" "container_service_agent" {
 }
 ```
 
-When you are refering to service agents from other projects, things get even worse. Those project numbers look very much lick what we call "the magic number".
+The complication intensifies when referencing service agents from different projects, as these project numbers can often resemble what we term "magic numbers".
 
-To tackle this, I wrote a simple Terraform module named [google-cloud-service-agents](https://github.com/yuankunzhang/google-cloud-service-agents). It consumes a project ID and exposes a list of service agents. With this module, the above code snippet can be rewritten to this:
+To address this issue, I've developed a simple Terraform module dubbed [google-cloud-service-agents](https://github.com/yuankunzhang/google-cloud-service-agents). This module accepts a project ID as input and provides a list of service agents as output. By leveraging this module, the aforementioned code snippet can be effectively refactored as follow:
 
 ```hcl
 data "google_project" "project" {}
@@ -79,4 +79,4 @@ resource "google_project_iam_binding" "container_service_agent" {
 }
 ```
 
-For more information, please check out the [Github repository](https://github.com/yuankunzhang/google-cloud-service-agents).
+For more information, kindly refer to the [Github repository](https://github.com/yuankunzhang/google-cloud-service-agents).
