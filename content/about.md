@@ -6,7 +6,7 @@ draft: false
 
 {{< rawhtml >}}
 <div>
-  <pre style="margin: 0; padding: 0;"><b>YUANKUN(7)                 Linux Programmer's Manual                 YUANKUN(7)<b></pre>
+  <pre style="margin: 0; padding: 0;"><b>YUANKUN(7)                 Linux Programmer's Manual                 YUANKUN(7)</b></pre>
   <pre style="margin: 0; padding: 50px 0 0 0; color: #a00000;"><b>NAME</b></pre>
   <pre style="margin: 0; padding: 0;">        <b>yuankun</b> - a code hunter</pre>
   <pre style="margin: 0; padding: 20px 0 0 0; color: #a00000;"><b>SYNOPSIS</b></pre>
@@ -65,6 +65,6 @@ draft: false
   <pre style="margin: 0; padding: 0;">        * Github:        <a href="https://github.com/yuankunzhang">https://github.com/yuankunzhang</a>
         * StackOverflow: <a href="https://stackoverflow.com/users/756651">https://stackoverflow.com/users/756651</a>
         * LinkedIn:      <a href="https://www.linkedin.com/in/yuankun-zhang-b1415b116/">https://www.linkedin.com/in/yuankun-zhang-b1415b116/</a></pre>
-  <pre style="margin: 0; padding: 50px 0 0 0;"><b>YUANKUN(7)                 Linux Programmer's Manual                 YUANKUN(7)<b></pre>
+  <pre style="margin: 0; padding: 50px 0 0 0;"><b>YUANKUN(7)                 Linux Programmer's Manual                 YUANKUN(7)</b></pre>
 </div>
 {{< /rawhtml >}}
