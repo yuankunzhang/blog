@@ -1,5 +1,5 @@
 ---
-title: "Running Raw Linux Kernel in QEMU"
+title: "Running the Raw Linux Kernel in QEMU"
 date: 2020-03-16T22:50:52+08:00
 draft: false
 tags:
@@ -7,31 +7,31 @@ tags:
   - qemu
 ---
 
-In last post we see how to run a packed Linux distribution in QEMU. This time let's check out how to run a raw Linux kernel in QEMU.
+In the [previous post](/posts/a-guide-on-running-alpine-linux-in-qemu/) we learned how to run a packaged Linux distribution in QEMU. This time, let's explore running a raw Linux kernel in QEMU.
 
 <!--more-->
 
-## Initial ramdisk: a very short introduction
+## A Brief Introduction to Initial Ramdisk
 
-Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to bake all the device drivers into the kernel image. On my machine, the size of `vmlinuz-linux` is only 6.3 megabytes:
+Many Linux distributions ship a small, generic kernel image. The device drivers are included as loadable kernel modules and stored in file system, it is just not practical to include all the device drivers in the kernel image itself. On my machine, the size of `vmlinuz-linux` is only 6.3 megabytes:
 
 ```sh
 $ ls -lh /boot/vmlinuz-linux
 -rw-r--r-- 1 root root 6.3M Mar 15 21:30 /boot/vmlinuz-linux
 ```
 
-This raises the problem of detecting and loading the modules necessary to mount the root file system at boot time. It's a chicken-and-egg problem. To further complicate the situation, the root file system may require special preparations to mount (for instance, it is on a encrypted partition).
+This presents a challenge of detecting and loading the necessary modules to mount the root file system during boot time. It's a chicken-and-egg problem. Additionally, the root file system may require special preparations to mount, such as being on an encrypted partition.
 
-Now comes the initial ramdisk as a temporary, ram-based root file system. It contains user-space utilities which detect hardwares, descover devices, load necessary modules, and mount the real root file system. Once it is loaded into memory, a simple but sufficient environment is set up for the Linux kernel to complete the boot process. This environment is often called "early user space".
+To address these challenges, the initial ramdisk comes into play as a temporary, RAM-based root file system. It contains user-space utilities that detect hardwares, descover devices, load necessary modules, and mount the actual root file system. Once it is loaded into memory, a simple yet sufficient environment is set up for the Linux kernel to complete the boot process. This environment is often called "early user space".
 
-On my machine, the initial ramdisk image sits in the boot partition with the name `initramfs-linux.img`. It is larger than the Linux kernel image:
+On my machine, the initial ramdisk image is located in the boot partition with the name `initramfs-linux.img`. Not surprisingly, it is larger than the Linux kernel image itself:
 
 ```sh
 $ ls -lh /boot/initramfs-linux.img
 -rw-r--r-- 1 root root 9.4M Mar 15 21:30 /boot/initramfs-linux.img
 ```
 
-We can inspect contents of the image by using command `lsinitcpio /boot/initramfs-linux.img`. Indeed, it is a simplified root system with a bunch of helper tools:
+We can examine the contents of the image by using command `lsinitcpio /boot/initramfs-linux.img`. Indeed, it contains a simplified root system with various helper tools:
 
 ```sh
 $ lsinitcpio /boot/initramfs-linux.img
@@ -66,15 +66,15 @@ var/run
 VERSION
 ```
 
-## Making an initial ramdisk
+## Creating an Initial Ramdisk
 
-The initial ramdisk creation command in Arch Linux is `mkinitcpio`, and may defer in other distributions.
+The command to create an initial ramdisk in Arch Linux `mkinitcpio`, but it may defer in other distributions.
 
-Quoting from man page of `mkinitcpio`:
+Quoting from the `mkinitcpio` manual page:
 
 > (mkinitcpio) creates an initial ramdisk environment for booting the Linux kernel. The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init. This makes it possible to have, for example, encrypted root filesystems and root filesystems on a software RAID array. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features.
 
-Let's go ahead and create the initial ramdisk.
+Let's proceed with creating the initial ramdisk.
 
 ```sh
 $ mkinitcpio -g initramfs.img
@@ -92,7 +92,7 @@ $ mkinitcpio -g initramfs.img
 ==> Image generation successful
 ```
 
-## Configuring and building the Linux kernel
+## Configuring and Building the Linux Kernel
 
 Clone the Linux source code, and configure the Linux kernel with `make ARCH=x86_64 menuconfig`.
 
@@ -101,7 +101,7 @@ Clone the Linux source code, and configure the Linux kernel with `make ARCH=x86_
 Save the configurations and exit the configuration interface, now let's compile the kernel image. The compiled kernel image will be located at `arch/x86/boot/bzImage`.
 
 ```sh
-$ make -j8
+$ make -j`nproc`
 ...
 Setup is 13820 bytes (padded to 13824 bytes).
 System is 8801 kB
@@ -109,9 +109,7 @@ CRC 52c54fbc
 Kernel: arch/x86/boot/bzImage is ready  (#2)
 ```
 
-The `-j` option specifies the number of jobs (commands) to run simultaneously. It's a reasonable choice to match it with your available logical CPU cores.
-
-## Booting the Linux kernel in QEMU
+## Booting the Linux Kernel in QEMU
 
 Now that we have both the Kernel image and the initial ramdisk, it's time to boot the Linux kernel in QEMU.
 
@@ -142,4 +140,4 @@ $ qemu-system-x86_64 \
 [rootfs ]#
 ```
 
-Soon you will find the `[rootfs] #` prompt appearing, and cheers we are now in the environment provided by the initial ramdisk.
+You will soon see the `[rootfs] #` prompt, indicating that we are now in the environment provided by the initial ramdisk. Cheers!
