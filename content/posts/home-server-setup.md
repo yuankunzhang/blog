@@ -1,5 +1,5 @@
 +++
-title = "Setting up a Home Server"
+title = "Setting Up a Home Server"
 date = 2021-06-21T20:50:45+08:00
 slug = "home-server-setup"
 categories = ["linux"]
