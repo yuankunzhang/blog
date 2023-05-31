@@ -1,5 +1,5 @@
 baseurl = "https://yuankun.me"
-title = "yuankun@net $"
+title = "yuankun@net: ~$"
 theme = "hugo-coder"
 languagecode = "en"
 defaultcontentlanguage = "en"
