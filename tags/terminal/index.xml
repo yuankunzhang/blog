@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>terminal on yuankun@net: ~$</title><link>https://yuankun.me/tags/terminal/</link><description>Recent content in terminal on yuankun@net: ~$</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 30 May 2022 21:20:45 +0800</lastBuildDate><atom:link href="https://yuankun.me/tags/terminal/index.xml" rel="self" type="application/rss+xml"/><item><title>TTY、终端和控制台：历史、用途和区别</title><link>https://yuankun.me/posts/tty-terminal-console/</link><pubDate>Mon, 30 May 2022 21:20:45 +0800</pubDate><guid>https://yuankun.me/posts/tty-terminal-console/</guid><description>在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。
-TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
+TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
 (Hughes Telegraph，图片来源：Wikipedia)
 (Siemens t37h，图片来源：Wikipedia)
 终端（Terminal）最初是指通过线路连接的物理设备，用户可以通过键盘输入并从屏幕读取信息。在大型机时代，计算机不仅昂贵，还显得庞大而笨重。计算机的使用者则借助“终端设备”来连接到主机，并以命令行的方式进行交互操作。最早被用作终端设备的是电传打字机与打字机的组合，电传打字机负责输入，而打印机则将输出结果打印在纸张上。不久之后，衍生出了专门的终端设备，将电传打字机和打印机的功能合二为一。

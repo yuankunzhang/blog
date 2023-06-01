@@ -1,5 +1,5 @@
 <!doctype html><html lang=en><head><title>TTY、终端和控制台：历史、用途和区别 · yuankun@net: ~$</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="Yuankun Zhang"><meta name=description content="在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。
-TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
+TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
 (Hughes Telegraph，图片来源：Wikipedia)
 (Siemens t37h，图片来源：Wikipedia)
 终端（Terminal）最初是指通过线路连接的物理设备，用户可以通过键盘输入并从屏幕读取信息。在大型机时代，计算机不仅昂贵，还显得庞大而笨重。计算机的使用者则借助“终端设备”来连接到主机，并以命令行的方式进行交互操作。最早被用作终端设备的是电传打字机与打字机的组合，电传打字机负责输入，而打印机则将输出结果打印在纸张上。不久之后，衍生出了专门的终端设备，将电传打字机和打印机的功能合二为一。
@@ -13,7 +13,7 @@ TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成�
 我们可以把控制台理解为操作系统通向外部的桥梁：用户通过控制台向操作系统下达命令，而操作系统则会将命令的执行状态和结果反馈到控制台进行显示。在操作系统的另一边，也就是用户端，这个桥梁与一个终端设备相连，这个终端设备可以是物理设备，也可以是虚拟设备。又因为最早使用的终端设备是电传打字机，所以在 Unix 系统中的终端子系统又被称为 TTY 子系统。
 以上就是 TTY、终端和控制台这三个术语的历史渊源及其概念性的差异。在后续的一篇文章中，我将深入探讨这三个术语在 Linux 语境下的具体含义和应用。
 Royal Earl House Invents a Telegraph that Composes and Prints in Roman Characters Rather than in Code&#160;&#8617;&#xfe0e;"><meta name=keywords content="code,read,life"><meta name=twitter:card content="summary"><meta name=twitter:title content="TTY、终端和控制台：历史、用途和区别"><meta name=twitter:description content="在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。
-TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
+TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
 (Hughes Telegraph，图片来源：Wikipedia)
 (Siemens t37h，图片来源：Wikipedia)
 终端（Terminal）最初是指通过线路连接的物理设备，用户可以通过键盘输入并从屏幕读取信息。在大型机时代，计算机不仅昂贵，还显得庞大而笨重。计算机的使用者则借助“终端设备”来连接到主机，并以命令行的方式进行交互操作。最早被用作终端设备的是电传打字机与打字机的组合，电传打字机负责输入，而打印机则将输出结果打印在纸张上。不久之后，衍生出了专门的终端设备，将电传打字机和打印机的功能合二为一。
@@ -27,7 +27,7 @@ TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成�
 我们可以把控制台理解为操作系统通向外部的桥梁：用户通过控制台向操作系统下达命令，而操作系统则会将命令的执行状态和结果反馈到控制台进行显示。在操作系统的另一边，也就是用户端，这个桥梁与一个终端设备相连，这个终端设备可以是物理设备，也可以是虚拟设备。又因为最早使用的终端设备是电传打字机，所以在 Unix 系统中的终端子系统又被称为 TTY 子系统。
 以上就是 TTY、终端和控制台这三个术语的历史渊源及其概念性的差异。在后续的一篇文章中，我将深入探讨这三个术语在 Linux 语境下的具体含义和应用。
 Royal Earl House Invents a Telegraph that Composes and Prints in Roman Characters Rather than in Code&#160;&#8617;&#xfe0e;"><meta property="og:title" content="TTY、终端和控制台：历史、用途和区别"><meta property="og:description" content="在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。
-TTY、终端和控制台 Link to heading TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
+TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输1。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。
 (Hughes Telegraph，图片来源：Wikipedia)
 (Siemens t37h，图片来源：Wikipedia)
 终端（Terminal）最初是指通过线路连接的物理设备，用户可以通过键盘输入并从屏幕读取信息。在大型机时代，计算机不仅昂贵，还显得庞大而笨重。计算机的使用者则借助“终端设备”来连接到主机，并以命令行的方式进行交互操作。最早被用作终端设备的是电传打字机与打字机的组合，电传打字机负责输入，而打印机则将输出结果打印在纸张上。不久之后，衍生出了专门的终端设备，将电传打字机和打印机的功能合二为一。
@@ -55,9 +55,7 @@ One-minute read</span></div><div class=categories><i class="fa fa-folder" aria-h
 <span class=separator>•</span>
 <span class=tag><a href=/tags/terminal/>terminal</a></span>
 <span class=separator>•</span>
-<span class=tag><a href=/tags/console/>console</a></span></div></div></header><div class=post-content><p>在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。</p><h2 id=tty终端和控制台>TTY、终端和控制台
-<a class=heading-link href=#tty%e7%bb%88%e7%ab%af%e5%92%8c%e6%8e%a7%e5%88%b6%e5%8f%b0><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
-<span class=sr-only>Link to heading</span></a></h2><p>TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。</p><p><img src=/img/printing-telegraph.jpg alt>
+<span class=tag><a href=/tags/console/>console</a></span></div></div></header><div class=post-content><p>在计算机的世界里，许多术语和概念是从早期的计算机技术中沿袭而来的，包括 TTY、终端和控制台。了解这三个术语的历史、用途以及区别对理解操作系统的终端和伪终端子系统很有帮助。</p><p>TTY（Teletype，中文一般翻译成电传打字机）的历史比计算机的历史更久远，可以追溯到电报机的时代。在电脑还没出现之前，人们通过这种设备进行远程信息传输<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>。随着时间的推进，TTY 在计算机领域中的含义演变成为一种能够在用户与计算机系统之间通过文本形式进行交互的接口。</p><p><img src=/img/printing-telegraph.jpg alt>
 (Hughes Telegraph，图片来源：Wikipedia)</p><p><img src=/img/siemens-t37h-without-cover.jpg alt>
 (Siemens t37h，图片来源：Wikipedia)</p><p>终端（Terminal）最初是指通过线路连接的物理设备，用户可以通过键盘输入并从屏幕读取信息。在大型机时代，计算机不仅昂贵，还显得庞大而笨重。计算机的使用者则借助“终端设备”来连接到主机，并以命令行的方式进行交互操作。最早被用作终端设备的是电传打字机与打字机的组合，电传打字机负责输入，而打印机则将输出结果打印在纸张上。不久之后，衍生出了专门的终端设备，将电传打字机和打印机的功能合二为一。</p><p><img src=/img/the-ibm-2741-terminal.jpg alt>
 (<a href=http://www.columbia.edu/cu/computinghistory/2741.html class=external-link target=_blank rel=noopener>The IBM 2741 Terminal</a>，图片来源：<a href=http://www-03.ibm.com/ibm/history/ibm100/images/icp/Z491903Y91074L07/us__en_us__ibm100__selectric__selectric_2__900x746.jpg class=external-link target=_blank rel=noopener>IBM</a>)</p><p>若干年后，电子显示屏逐渐取代了打印机成了新的输出设备。我们所熟知的”物理终端“的概念指的就是这一时期的终端设备，其中比较有代表性的是德州仪器的 VT100 系列终端设备。</p><p><img src=/img/dec-vt100-terminal.jpg alt>
