@@ -10,7 +10,7 @@ tags:
   - gdb
 ---
 
-In the [previous article](/posts/running-raw-linux-kernel-in-qemu/), we explored how to run a raw Linux kernel in QEMU. Another fascinating feature that QEMU provides is to initiate a GDB server. An external GDB debugger can then connect to it. This means that we can suspend the kernel running at any point of the kernel startup. By leveraging this feature, we can construct an efficient environment to debug system kernels and firmware. In this guide, we will explore the process of using this feature to debug the Linux kernel.
+In the [previous article](/posts/running-the-raw-linux-kernel-in-qemu/), we explored how to run a raw Linux kernel in QEMU. Another fascinating feature that QEMU provides is to initiate a GDB server. An external GDB debugger can then connect to it. This means that we can suspend the kernel running at any point of the kernel startup. By leveraging this feature, we can construct an efficient environment to debug system kernels and firmware. In this guide, we will explore the process of using this feature to debug the Linux kernel.
 
 <!--more-->
 
