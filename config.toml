@@ -4,6 +4,8 @@ theme = "hugo-coder"
 languagecode = "en"
 defaultcontentlanguage = "en"
 
+googleAnalytics = "G-ZXQSK4ST20"
+
 paginate = 20
 
 [markup.highlight]
