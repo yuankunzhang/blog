@@ -29,7 +29,7 @@ draft: false
   <pre style="margin: 0; padding: 20px 0 0 0;">        <b>--coder</b>
             I'm proficient in several languages including C, C++, Golang,
             Java, Python, and JavaScript. Generally I prefer statically
-            typed languages  over dynamically typed languages.
+            typed languages over dynamically typed languages.
 
             I've embarked on my latest quest to master the art of Rust.
             Irony? Perhaps, since I don't intend to let my skill oxidize.
