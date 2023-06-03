@@ -1,0 +1,18 @@
+.wrapper main .container {
+  display: block;
+  padding: 0;
+  margin: auto;
+  width: 100% !important;
+}
+
+.wrapper main .container .page {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0;
+}
+
+.wrapper main .container .page h1.single-title {
+  text-align: left;
+  width: 100%;
+  margin: 20px;
+}
