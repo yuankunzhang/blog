@@ -1,59 +1,69 @@
 baseurl = "https://yuankun.me"
 title = "yuankun@net: ~$"
-theme = "hugo-coder"
+theme = "DoIt"
 languagecode = "en"
 defaultcontentlanguage = "en"
-
-googleAnalytics = "G-ZXQSK4ST20"
-
 paginate = 20
 
-[markup.highlight]
-style = "github-dark"
+#[markup.highlight]
+#style = "github-dark"
 
 [params]
   author = "Yuankun Zhang"
   info = "Coder, Runner"
+  title = "yuankun@net: ~$"
   description = "Always do what you're afraid to do"
   keywords = "code,read,life"
 
-  favicon_32 = "/img/favicon-32x32.png"
-  favicon_16 = "/img/favicon-16x16.png"
+  # DoIt theme version
+  version = "0.3.X"
+  enablePWA = false
 
-  since = 2019
+[params.home.profile]
+  enable = false
 
-  enableTwemoji = true
+[params.analytics]
+  enable = true
 
-  colorScheme = "auto"
-  hidecolorschemetoggle = false
+[params.analytics.google]
+  id = "G-ZXQSK4ST20"
+  anonymizeIP = false
 
-  # customCSS = ["css/custom.css"]
-  # customSCSS = ["scss/custom.scss"]
-  # customJS = ["js/custom.js"]
+[markup.highlight]
+  codeFences = true
+  guessSyntax = true
+  lineNos = false
+  lineNumbersInTable = true
+  noClasses = false
 
-[taxonomies]
-  category = "categories"
-  series = "series"
-  tag = "tags"
-  author = "authors"
+#[taxonomies]
+#  category = "categories"
+#  series = "series"
+#  tag = "tags"
+#  author = "authors"
 
-# Social links
-[[params.social]]
-  name = "Github"
-  icon = "fa fa-github fa-2x"
-  weight = 1
-  url = "https://github.com/yuankunzhang/"
-[[params.social]]
-  name = "stackoverflow"
-  icon = "fa fa-stack-overflow fa-2x"
-  weight = 2
-  url = "https://stackoverflow.com/users/756651"
-
-[params.utterances]
+[params.page.comment.utterances]
+  enable = true
   repo = "yuankunzhang/blog"
   issueTerm = "pathname"
   label = "comment"
-  theme = "github-light"
+  lightTheme = "github-light"
+  darkTheme = "github-dark"
+
+## Social links
+#[[params.social]]
+#  name = "Github"
+#  icon = "fa fa-github fa-2x"
+#  weight = 1
+#  url = "https://github.com/yuankunzhang/"
+#[[params.social]]
+#  name = "stackoverflow"
+#  icon = "fa fa-stack-overflow fa-2x"
+#  weight = 2
+#  url = "https://stackoverflow.com/users/756651"
+
+[author]
+  name = "yuankun"
 
 # Menu links
 [[menu.main]]
@@ -64,3 +74,7 @@ style = "github-dark"
   name = "About"
   weight = 2
   url = "about/"
+[[menu.main]]
+  name = "Linux Syscalls"
+  weight = 3
+  url = "syscall64/"
