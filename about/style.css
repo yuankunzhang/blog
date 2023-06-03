@@ -1,0 +1,22 @@
+.wrapper main .container {
+  display: inline-block;
+  padding: 0;
+  margin: auto;
+  width: 800px;
+}
+
+.wrapper main .container .page {
+  width: 100% !important;
+  margin: 40px 0 40px 10px;
+}
+
+.wrapper main .container .page h1.single-title {
+  text-align: left;
+  width: 100%;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.single .content pre {
+  background-color: white;
+}
