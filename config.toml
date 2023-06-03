@@ -78,6 +78,10 @@ paginate = 20
   weight = 2
   url = "about/"
 [[menu.main]]
-  name = "Linux Syscalls"
+  name = "Linux x64 Syscalls"
   weight = 3
   url = "syscall64/"
+[[menu.main]]
+  name = "Linux x32 Syscalls"
+  weight = 4
+  url = "syscall32/"
