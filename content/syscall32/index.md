@@ -1,5 +1,5 @@
 ---
-title: "Linux System Call Table (x32)"
+title: "Linux System Call Table (x86)"
 draft: false
 ---
 
